@@ -35,7 +35,11 @@
 
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.GenerarInformeActivity" />
+        <activity
+            android:name=".view.activity.GenerarInformeActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
         <activity android:name=".view.activity.ListaInformesActivity" />
     </application>
 
