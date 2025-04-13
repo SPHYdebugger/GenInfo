@@ -25,6 +25,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -165,35 +166,38 @@ public class InformePdfGenerator {
                 int index = 0;
                 for (Uri uri : imagenesAdjuntas) {
                     if (index >= totalCeldas) break;
-                    try {
-                        Bitmap bmp = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bmp.compress(Bitmap.CompressFormat.JPEG, 90, baos);
-                        Image imagen = Image.getInstance(baos.toByteArray());
+                    try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
+                        if (inputStream != null) {
+                            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+                            if (bmp != null) {
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                bmp.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+                                Image imagen = Image.getInstance(baos.toByteArray());
 
-                        float targetHeight = 170f;
-                        float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-                        float targetWidth = targetHeight * aspectRatio;
-                        imagen.scaleAbsolute(targetWidth, targetHeight);
-                        imagen.setAlignment(Image.ALIGN_CENTER);
+                                float targetHeight = 170f;
+                                float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
+                                float targetWidth = targetHeight * aspectRatio;
+                                imagen.scaleAbsolute(targetWidth, targetHeight);
+                                imagen.setAlignment(Image.ALIGN_CENTER);
 
-                        PdfPCell celda = new PdfPCell(imagen, true);
-                        celda.setFixedHeight(targetHeight + 20);
-                        celda.setHorizontalAlignment(Element.ALIGN_CENTER);
-                        celda.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                        celda.setPadding(5);
-                        celda.setBorder(PdfPCell.NO_BORDER);
+                                PdfPCell celda = new PdfPCell(imagen, true);
+                                celda.setFixedHeight(targetHeight + 20);
+                                celda.setHorizontalAlignment(Element.ALIGN_CENTER);
+                                celda.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                                celda.setPadding(5);
+                                celda.setBorder(PdfPCell.NO_BORDER);
 
-                        tablaFotos.addCell(celda);
-                        index++;
-
+                                tablaFotos.addCell(celda);
+                                index++;
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
-                // Si hay menos de 4 imágenes, añadir celdas vacías
-                for (int i = imagenesAdjuntas.size(); i < totalCeldas; i++) {
+                // Rellenar hasta completar las 4 celdas
+                for (int i = index; i < totalCeldas; i++) {
                     PdfPCell celdaVacia = new PdfPCell();
                     celdaVacia.setFixedHeight(170);
                     celdaVacia.setBorder(PdfPCell.NO_BORDER);
@@ -209,6 +213,7 @@ public class InformePdfGenerator {
                     tablaFotos.addCell(celda);
                 }
             }
+
 
             document.add(tablaFotos);
 

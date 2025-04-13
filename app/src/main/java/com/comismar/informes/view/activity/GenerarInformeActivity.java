@@ -102,82 +102,37 @@ public class GenerarInformeActivity extends Activity {
         });
 
         btnGenerarInforme.setOnClickListener(v -> {
-            Toast.makeText(this, "Generando PDF...", Toast.LENGTH_SHORT).show();
+            String referencia = inputReferencia.getText().toString().trim();
+            String siniestro = ((EditText) findViewById(R.id.inputSiniestro)).getText().toString().trim();
+            String lugar = inputLugar.getText().toString().trim();
 
-            String siniestro = ((EditText) findViewById(R.id.inputSiniestro)).getText().toString();
-            String requirente = ((EditText) findViewById(R.id.inputRequirente)).getText().toString();
-            String tecnico = ((EditText) findViewById(R.id.inputTecnico)).getText().toString();
-            String nombreBarco = ((EditText) findViewById(R.id.inputNombreBarco)).getText().toString();
-            String matricula = ((EditText) findViewById(R.id.inputMatricula)).getText().toString();
-            String daños = ((EditText) findViewById(R.id.inputDaños)).getText().toString();
-            String docP = ((EditText) findViewById(R.id.inputDocP)).getText().toString();
-            String causas = ((EditText) findViewById(R.id.inputCausas)).getText().toString();
-            String reserva = ((EditText) findViewById(R.id.inputReserva)).getText().toString();
-            String observaciones = ((EditText) findViewById(R.id.inputObservaciones)).getText().toString();
-            String referencia = ((EditText) findViewById(R.id.inputReferencia)).getText().toString();
-            String lugar = ((EditText) findViewById(R.id.inputLugar)).getText().toString();
-            boolean enviarPorCorreo = checkboxEnviarPdf.isChecked();
+            // Validar campos obligatorios
+            if (referencia.isEmpty() || siniestro.isEmpty() || lugar.isEmpty()) {
+                StringBuilder mensaje = new StringBuilder("Debes completar los siguientes campos:\n");
+                if (referencia.isEmpty()) mensaje.append("- REFERENCIA\n");
+                if (siniestro.isEmpty()) mensaje.append("- SINIESTRO\n");
+                if (lugar.isEmpty()) mensaje.append("- LUGAR\n");
 
-
-            File pdfGenerado = InformePdfGenerator.generarPdfDesdeDatos(
-                    this,
-                    getExternalFilesDir(null),
-                    referencia,
-                    siniestro,
-                    requirente,
-                    lugar,
-                    tecnico,
-                    nombreBarco,
-                    matricula,
-                    daños,
-                    causas,
-                    reserva,
-                    observaciones,
-                    docP,
-                    imagenesAdjuntas
-            );
-
-            // Guardar en la base de datos
-            Informe nuevoInforme = new Informe();
-            nuevoInforme.tipo = nombreBarco;
-            nuevoInforme.referencia = referencia;
-            nuevoInforme.trabajo = siniestro;
-            nuevoInforme.descripcion = daños;
-            nuevoInforme.timestamp = System.currentTimeMillis();
-            nuevoInforme.rutaPdf = pdfGenerado.getAbsolutePath();
-
-            AppDatabase db = AppDatabase.getInstance(getApplicationContext());
-            db.informeDao().insertar(nuevoInforme);
-            Toast.makeText(this, "Informe añadido a la lista", Toast.LENGTH_SHORT).show();
-
-            if (enviarPorCorreo) {
-                new Thread(() -> {
-                    try {
-                        MailSender sender = new MailSender("infogenpdf@gmail.com", "lwoi wagz zywo udae");
-                        sender.enviarCorreo(
-                                "Informe de intervención: " + referencia,
-                                "Se adjunta el informe generado.",
-                                "infogenpdf@gmail.com",
-                                "infogenpdf@gmail.com",  // ⚠️ asegúrate que esta dirección existe
-                                pdfGenerado
-                        );
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, "PDF enviado por email", Toast.LENGTH_SHORT).show();
-                            volverAlInicio();  // 👈 Regresar a MainActivity
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(() ->
-                                Toast.makeText(this, "Error al enviar PDF", Toast.LENGTH_SHORT).show()
-                        );
-                    }
-                }).start();
-            } else {
-                volverAlInicio();  // 👈 Regresar directamente si no se envía por correo
+                new AlertDialog.Builder(this)
+                        .setTitle("Campos obligatorios")
+                        .setMessage(mensaje.toString())
+                        .setPositiveButton("Cerrar", null)
+                        .show();
+                return; // ⛔ No continuar
             }
 
-        });
+            // Si todo está bien, mostrar confirmación
+            int numeroFotos = imagenesAdjuntas.size();
+            String mensaje = "¿Estás seguro de crear el informe " + referencia + "?\n" +
+                    (numeroFotos > 0 ? "Con " + numeroFotos + " foto(s) adjunta(s)." : "Sin fotos adjuntas.");
 
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirmar creación de informe")
+                    .setMessage(mensaje)
+                    .setPositiveButton("CREAR", (dialog, which) -> generarInforme())
+                    .setNegativeButton("CANCELAR", null)
+                    .show();
+        });
 
         btnBack.setOnClickListener(v -> {
             Intent intent = new Intent(GenerarInformeActivity.this, MainActivity.class);
@@ -185,6 +140,82 @@ public class GenerarInformeActivity extends Activity {
         });
 
     }
+
+    private void generarInforme() {
+        Toast.makeText(this, "Generando PDF...", Toast.LENGTH_SHORT).show();
+
+        String siniestro = ((EditText) findViewById(R.id.inputSiniestro)).getText().toString();
+        String requirente = ((EditText) findViewById(R.id.inputRequirente)).getText().toString();
+        String tecnico = ((EditText) findViewById(R.id.inputTecnico)).getText().toString();
+        String nombreBarco = ((EditText) findViewById(R.id.inputNombreBarco)).getText().toString();
+        String matricula = ((EditText) findViewById(R.id.inputMatricula)).getText().toString();
+        String daños = ((EditText) findViewById(R.id.inputDaños)).getText().toString();
+        String docP = ((EditText) findViewById(R.id.inputDocP)).getText().toString();
+        String causas = ((EditText) findViewById(R.id.inputCausas)).getText().toString();
+        String reserva = ((EditText) findViewById(R.id.inputReserva)).getText().toString();
+        String observaciones = ((EditText) findViewById(R.id.inputObservaciones)).getText().toString();
+        String referencia = inputReferencia.getText().toString().trim();
+        String lugar = inputLugar.getText().toString().trim();
+        boolean enviarPorCorreo = checkboxEnviarPdf.isChecked();
+
+        File pdfGenerado = InformePdfGenerator.generarPdfDesdeDatos(
+                this,
+                getExternalFilesDir(null),
+                referencia,
+                siniestro,
+                requirente,
+                lugar,
+                tecnico,
+                nombreBarco,
+                matricula,
+                daños,
+                causas,
+                reserva,
+                observaciones,
+                docP,
+                imagenesAdjuntas
+        );
+
+        // Guardar en la base de datos
+        Informe nuevoInforme = new Informe();
+        nuevoInforme.tipo = nombreBarco;
+        nuevoInforme.referencia = referencia;
+        nuevoInforme.trabajo = siniestro;
+        nuevoInforme.descripcion = daños;
+        nuevoInforme.timestamp = System.currentTimeMillis();
+        nuevoInforme.rutaPdf = pdfGenerado.getAbsolutePath();
+
+        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+        db.informeDao().insertar(nuevoInforme);
+        Toast.makeText(this, "Informe añadido a la lista", Toast.LENGTH_SHORT).show();
+
+        if (enviarPorCorreo) {
+            new Thread(() -> {
+                try {
+                    MailSender sender = new MailSender("infogenpdf@gmail.com", "lwoi wagz zywo udae");
+                    sender.enviarCorreo(
+                            "Informe de intervención: " + referencia,
+                            "Se adjunta el informe generado.",
+                            "infogenpdf@gmail.com",
+                            "infogenpdf@gmail.com",
+                            pdfGenerado
+                    );
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "PDF enviado por email", Toast.LENGTH_SHORT).show();
+                        volverAlInicio();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "Error al enviar PDF", Toast.LENGTH_SHORT).show()
+                    );
+                }
+            }).start();
+        } else {
+            volverAlInicio();
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

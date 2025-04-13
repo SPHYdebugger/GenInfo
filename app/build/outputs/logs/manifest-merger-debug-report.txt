@@ -11,10 +11,10 @@ INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\Androi
 	android:name
 		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:17:13-62
 manifest
-ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:2:1-49:12
+ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:2:1-53:12
+INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:2:1-53:12
+INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:2:1-53:12
+INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:2:1-53:12
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\sanph\.gradle\caches\transforms-3\f0d327b5fa71a05459955de625eeb703\transformed\material-1.9.0\AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\sanph\.gradle\caches\transforms-3\6f650d68a1b3d373f492e24a9a8ff434\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\sanph\.gradle\caches\transforms-3\e7144b8195b27177976495cafc405834\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
@@ -74,8 +74,8 @@ ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidMa
 	android:name
 		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:6:9-47
 application
-ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:8:5-40:19
-INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:8:5-40:19
+ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:8:5-44:19
+INJECTED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:8:5-44:19
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\sanph\.gradle\caches\transforms-3\f0d327b5fa71a05459955de625eeb703\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\sanph\.gradle\caches\transforms-3\f0d327b5fa71a05459955de625eeb703\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\sanph\.gradle\caches\transforms-3\6f650d68a1b3d373f492e24a9a8ff434\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -129,29 +129,33 @@ ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidMa
 	android:name
 		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:33:27-74
 activity#com.comismar.informes.view.activity.GenerarInformeActivity
-ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:38:9-74
+ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:38:9-41:40
+	android:screenOrientation
+		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:40:13-49
+	android:exported
+		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:41:13-37
 	android:name
-		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:38:19-71
+		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:39:13-65
 activity#com.comismar.informes.view.activity.ListaInformesActivity
-ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:39:9-73
+ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:43:9-73
 	android:name
-		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:39:19-70
+		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:43:19-70
 uses-permission#android.permission.CAMERA
-ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:43:5-65
+ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:47:5-65
 	android:name
-		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:43:22-62
+		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:47:22-62
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:44:5-80
+ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:48:5-80
 	android:name
-		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:44:22-77
+		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:48:22-77
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:45:5-81
+ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:49:5-81
 	android:name
-		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:45:22-78
+		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:49:22-78
 uses-permission#android.permission.INTERNET
-ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:46:5-67
+ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:50:5-67
 	android:name
-		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:46:22-64
+		ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:50:22-64
 meta-data#android.support.FILE_PROVIDER_PATHS
 ADDED from C:\Users\sanph\Downloads\ComismarApp_CORREGIDO\app\src\main\AndroidManifest.xml:21:13-23:54
 	android:resource
