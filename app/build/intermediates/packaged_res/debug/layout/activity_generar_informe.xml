@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Encabezado con imagen -->
+        <ImageView
+            android:id="@+id/headerImage"
+            android:layout_width="match_parent"
+            android:layout_height="153dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/horizontal" />
+
+
+
+        <!-- Referencia -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REFERENCIA DE INTERVENCIÓN"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp" />
+
+        <EditText
+            android:id="@+id/inputReferencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/edit_text"
+            android:padding="8dp"
+            android:inputType="textCapSentences"/>
+
+        <!-- SINIESTRO -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="SINIESTRO" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputSiniestro" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:background="@android:drawable/edit_text"
+            android:padding="8dp" android:inputType="textCapSentences"/>
+
+        <!-- REQUIRENTE -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="REQUIRENTE" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputRequirente" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:background="@android:drawable/edit_text"
+            android:padding="8dp" android:inputType="textCapSentences"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LUGAR"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp" />
+
+        <EditText
+            android:id="@+id/inputLugar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/edit_text"
+            android:padding="8dp"
+            android:inputType="textCapSentences"/>
+
+        <!-- TÉCNICO -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="PERSONAS PRESENTES" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputTecnico" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:background="@android:drawable/edit_text"
+            android:padding="8dp" android:inputType="textCapSentences"/>
+
+        <!-- BARCO -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="NOMBRE BARCO" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputNombreBarco" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:background="@android:drawable/edit_text"
+            android:padding="8dp" android:inputType="textCapSentences"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="MATRÍCULA" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputMatricula" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:background="@android:drawable/edit_text"
+            android:padding="8dp" android:inputType="textCapSentences"/>
+
+
+        <!-- Trabajo realizado -->
+
+        <!-- DAÑOS -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="DAÑOS" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputDaños" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="100dp" android:gravity="top"
+            android:background="@android:drawable/edit_text" android:padding="8dp"
+            android:inputType="textMultiLine|textCapSentences"/>
+
+        <!-- CAUSAS -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="CAUSAS" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputCausas" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="100dp" android:gravity="top"
+            android:background="@android:drawable/edit_text" android:padding="8dp"
+            android:inputType="textMultiLine|textCapSentences"/>
+
+        <!-- RESERVA -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="RESERVA" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputReserva" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="100dp" android:gravity="top"
+            android:background="@android:drawable/edit_text" android:padding="8dp"
+            android:inputType="textMultiLine|textCapSentences"/>
+
+        <!-- OBSERVACIONES -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="OBSERVACIONES" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputObservaciones" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="100dp" android:gravity="top"
+            android:background="@android:drawable/edit_text" android:padding="8dp"
+            android:inputType="textMultiLine|textCapSentences"/>
+
+        <!-- DOCUMENTACIÓN PENDIENTE -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="DOCUMENTACIÓN PENDIENTE" android:textStyle="bold" android:layout_marginTop="12dp"/>
+        <EditText android:id="@+id/inputDocP" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="100dp" android:gravity="top"
+            android:background="@android:drawable/edit_text" android:padding="8dp"
+            android:inputType="textMultiLine|textCapSentences"/>
+
+        <!-- Lista de imágenes adjuntadas -->
+        <TextView
+            android:id="@+id/textAdjuntos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Imágenes adjuntadas:"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/layoutImagenesAdjuntas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp" />
+
+
+        <!-- Botón Adjuntar Fotos -->
+        <Button
+            android:id="@+id/btnAdjuntarFotos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADJUNTAR FOTOS"
+            android:backgroundTint="#007bbb"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp" />
+
+        <CheckBox
+            android:id="@+id/checkboxEnviarPdf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enviar PDF por correo automáticamente"
+            android:checked="false"
+            android:paddingTop="16dp" />
+
+
+        <!-- Botón Generar Informe -->
+        <Button
+            android:id="@+id/btnGenerarInforme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GENERAR INFORME"
+            android:backgroundTint="#007bbb"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="12dp" />
+
+        <!-- Botón Volver al inicio -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/boton_redondeado"
+            android:enabled="true"
+            android:text="VOLVER AL MENÚ"
+            android:textColor="@android:color/white" />
+
+
+
+
+    </LinearLayout>
+</ScrollView>
