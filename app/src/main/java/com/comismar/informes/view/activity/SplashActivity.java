@@ -1,4 +1,3 @@
-
 package com.comismar.informes.view.activity;
 
 import android.content.Intent;
@@ -7,6 +6,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.comismar.informes.R;
+import com.comismar.informes.view.utils.AppSettings;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
@@ -15,7 +15,11 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            Class<?> targetActivity = AppSettings.isRememberLoginEnabled(this)
+                    ? MainActivity.class
+                    : LoginActivity.class;
+
+            Intent intent = new Intent(SplashActivity.this, targetActivity);
             startActivity(intent);
             finish();
         }, 3000);

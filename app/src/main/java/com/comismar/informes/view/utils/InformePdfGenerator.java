@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
+import androidx.core.os.ConfigurationCompat;
+
 import com.comismar.informes.R;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -36,9 +38,14 @@ public class InformePdfGenerator {
     public static File generarPdfDesdeDatos(Context context, File outputDir,
                                             String referencia, String siniestro, String requirente, String lugar,
                                             String tecnico, String nombreBarco, String matricula, String daños,
-                                            String causas, String reserva, String observaciones, String docP, List<Uri> imagenesAdjuntas) {
+                                            String causas, String reserva, String observaciones, String docP,
+                                            List<Uri> imagenesAdjuntas, boolean optimizarFotos) {
         File file = null;
-        String fechaHoy = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES")).format(new Date());
+        Locale reportLocale = ConfigurationCompat.getLocales(context.getResources().getConfiguration()).get(0);
+        if (reportLocale == null) {
+            reportLocale = Locale.getDefault();
+        }
+        String fechaHoy = new SimpleDateFormat(context.getString(R.string.report_date_long_pattern), reportLocale).format(new Date());
         try {
             Document document = new Document(PageSize.A4, 40, 40, 20, 20);
             String nombreArchivo = "informe_" + referencia.replaceAll("[^a-zA-Z0-9_-]", "_") + "_" + System.currentTimeMillis() + ".pdf";
@@ -48,7 +55,8 @@ public class InformePdfGenerator {
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
 
             Bitmap footerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.footer);
-            writer.setPageEvent(new CustomFooter(footerBitmap));
+            byte[] footerBytes = comprimirImagenDecorativa(footerBitmap, optimizarFotos);
+            writer.setPageEvent(new CustomFooter(footerBytes, context.getString(R.string.report_page_prefix)));
 
             document.open();
 
@@ -58,14 +66,13 @@ public class InformePdfGenerator {
             Font fontValue = new Font(Font.FontFamily.HELVETICA, 9);
 
             Bitmap logoBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.titulo);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            logoBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            Image logo = Image.getInstance(stream.toByteArray());
+            byte[] logoBytes = comprimirImagenDecorativa(logoBitmap, optimizarFotos);
+            Image logo = Image.getInstance(logoBytes);
             logo.scaleToFit(160, 80);
             logo.setAlignment(Image.ALIGN_CENTER);
             document.add(logo);
 
-            Paragraph titulo = new Paragraph("INFORME PRELIMINAR EERR", fontTitle);
+            Paragraph titulo = new Paragraph(context.getString(R.string.report_title), fontTitle);
             titulo.setAlignment(Element.ALIGN_CENTER);
             titulo.setSpacingAfter(20);
             document.add(titulo);
@@ -78,7 +85,7 @@ public class InformePdfGenerator {
 
             // Texto vertical
             Font fontVertical = new Font(Font.FontFamily.HELVETICA, 6, Font.NORMAL, BaseColor.GRAY);
-            PdfPCell celdaVertical = new PdfPCell(new Phrase("Rev.: " + fechaHoy + " - Este documento es propiedad de COMISMAR, S.A. y de uso estrictamente confidencial, no podrá ser utilizado ni distribuido sin autorización expresa de la dirección de la empresa.", fontVertical));
+            PdfPCell celdaVertical = new PdfPCell(new Phrase(context.getString(R.string.report_vertical_revision, fechaHoy), fontVertical));
             celdaVertical.setRotation(90); // gira el texto
             celdaVertical.setBorder(PdfPCell.NO_BORDER);
             celdaVertical.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -97,49 +104,49 @@ public class InformePdfGenerator {
 
 
             // Sección 1
-            tabla.addCell(getSeccion("1. DATOS INTERVENCIÓN", fontSection));
-            tabla.addCell(getCeldaEtiqueta("Referencia"));
+            tabla.addCell(getSeccion(context.getString(R.string.report_section_1), fontSection));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_reference)));
             tabla.addCell(getCeldaDato(referencia));
-            tabla.addCell(getCeldaEtiqueta("Siniestro"));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_incident)));
             tabla.addCell(getCeldaDato(siniestro));
-            tabla.addCell(getCeldaEtiqueta("Requirente"));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_requester)));
             tabla.addCell(getCeldaDato(requirente));
 
 
             // Sección 2
-            tabla.addCell(getSeccion("2. INSPECCIÓN", fontSection));
-            tabla.addCell(getCeldaEtiqueta("Fecha"));
-            String fechaActual = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date());
+            tabla.addCell(getSeccion(context.getString(R.string.report_section_2), fontSection));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_date)));
+            String fechaActual = new SimpleDateFormat(context.getString(R.string.report_date_time_pattern), reportLocale).format(new Date());
             tabla.addCell(getCeldaDato(fechaActual));
-            tabla.addCell(getCeldaEtiqueta("Lugar"));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_place)));
             tabla.addCell(getCeldaDato(lugar));
-            tabla.addCell(getCeldaEtiqueta("Técnico Intervención"));
-            tabla.addCell(getCeldaDato("Álvaro Pousada López     COMISMAR S.A."));
-            tabla.addCell(getCeldaEtiqueta("Otras personas"));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_technician)));
+            tabla.addCell(getCeldaDato(context.getString(R.string.report_default_technician)));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_other_people)));
             tabla.addCell(getCeldaDato(tecnico));
 
 
             // Sección 3
-            tabla.addCell(getSeccion("3. EMBARCACIÓN", fontSection));
-            tabla.addCell(getCeldaEtiqueta("Nombre barco"));
+            tabla.addCell(getSeccion(context.getString(R.string.report_section_3), fontSection));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_boat_name)));
             tabla.addCell(getCeldaDato(nombreBarco));
-            tabla.addCell(getCeldaEtiqueta("Matrícula"));
+            tabla.addCell(getCeldaEtiqueta(context.getString(R.string.report_label_registration)));
             tabla.addCell(getCeldaDato(matricula));
 
 
             // Secciones de texto largo
-            tabla.addCell(getSeccion("4. DAÑOS", fontSection));
+            tabla.addCell(getSeccion(context.getString(R.string.report_section_4), fontSection));
             tabla.addCell(getTextoLargo(daños, fontValue));
 
-            tabla.addCell(getSeccion("5. CAUSAS", fontSection));
+            tabla.addCell(getSeccion(context.getString(R.string.report_section_5), fontSection));
             tabla.addCell(getTextoLargo(causas, fontValue));
 
-            tabla.addCell(getSeccion("6. RESERVA", fontSection));
+            tabla.addCell(getSeccion(context.getString(R.string.report_section_6), fontSection));
             tabla.addCell(getTextoLargo(reserva, fontValue));
 
-            tabla.addCell(getSeccion("7. OBSERVACIONES", fontSection));
+            tabla.addCell(getSeccion(context.getString(R.string.report_section_7), fontSection));
             tabla.addCell(getTextoLargo(observaciones, fontValue));
-            tabla.addCell(getSeccion("DOCUMENTACIÓN PENDIENTE", fontSection));
+            tabla.addCell(getSeccion(context.getString(R.string.report_section_pending_docs), fontSection));
             tabla.addCell(getTextoLargo(docP, fontValue));
 
 
@@ -152,7 +159,7 @@ public class InformePdfGenerator {
             document.newPage();
 
             document.add(new Paragraph(" ")); // espacio
-            document.add(new Paragraph("IMÁGENES ADJUNTAS", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+            document.add(new Paragraph(context.getString(R.string.report_attached_images), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
             document.add(new Paragraph(" ")); // espacio
 
             PdfPTable tablaFotos = new PdfPTable(2);
@@ -164,15 +171,16 @@ public class InformePdfGenerator {
 
             if (imagenesAdjuntas != null && !imagenesAdjuntas.isEmpty()) {
                 int index = 0;
+                int totalImagenes = Math.min(imagenesAdjuntas.size(), totalCeldas);
+                int maxBytesPorImagen = calcularMaxBytesPorImagen(totalImagenes, optimizarFotos);
                 for (Uri uri : imagenesAdjuntas) {
                     if (index >= totalCeldas) break;
                     try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
                         if (inputStream != null) {
                             Bitmap bmp = BitmapFactory.decodeStream(inputStream);
                             if (bmp != null) {
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                bmp.compress(Bitmap.CompressFormat.JPEG, 90, baos);
-                                Image imagen = Image.getInstance(baos.toByteArray());
+                                byte[] imagenBytes = comprimirImagen(bmp, optimizarFotos, maxBytesPorImagen);
+                                Image imagen = Image.getInstance(imagenBytes);
 
                                 float targetHeight = 170f;
                                 float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
@@ -205,7 +213,7 @@ public class InformePdfGenerator {
                 }
 
             } else {
-                document.add(new Paragraph("\nNo se han adjuntado fotos", fontLabel));
+                document.add(new Paragraph("\n" + context.getString(R.string.report_no_attached_photos), fontLabel));
                 for (int i = 0; i < totalCeldas; i++) {
                     PdfPCell celda = new PdfPCell(new Phrase(" "));
                     celda.setFixedHeight(170); // mantener altura
@@ -220,16 +228,12 @@ public class InformePdfGenerator {
 
             Font fontLegal = new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.DARK_GRAY);
             Font fontLegalBold = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD, BaseColor.DARK_GRAY);
-            document.add(new Paragraph("\n\nEste informe, por su carácter exclusivamente técnico, se emite sin prejuzgar cuestiones de derecho y/o responsabilidad de cualquiera de las partes interesadas en el mismo, y a reserva de las condiciones establecidas en la Póliza de Seguros.\n" +
-                    "\n" +
-                    "Además, y a los efectos del Artículo 335 de la Ley de Enjuiciamiento Civil 1/2000, el abajo firmante D. Álvaro Pousada López en su calidad de PERITO, manifiesta bajo juramento o promesa de decir verdad, que ha actuado y, en su caso, actuará con la mayor objetividad posible, tomando en consideración tanto lo que pueda favorecer como lo que sea susceptible de causar perjuicio a cualquiera de las partes, y que conoce las sanciones penales en las que podría incurrir si incumpliere su deber como perito.\n" +
-                    "\n" +
-                    "De conformidad con lo dispuesto en la normativa de protección de datos, comunicamos que para los posibles datos personales incluidos en este informe pueden ejercitarse los derechos de acceso, rectificación, oposición y cancelación ante COMISMAR, S.A., sito en la calle Pintor Juan Gris, nº 4 - 28020 – Madrid.\t", fontLegal));
+            document.add(new Paragraph("\n\n" + context.getString(R.string.report_legal_text), fontLegal));
 
 
 
             // Crear párrafo alineado a la derecha
-            Paragraph parrafoFecha = new Paragraph("En " + lugar +", " + fechaHoy, fontLabel);
+            Paragraph parrafoFecha = new Paragraph(context.getString(R.string.report_location_date, lugar, fechaHoy), fontLabel);
             parrafoFecha.setAlignment(Element.ALIGN_RIGHT);
 
             // Agregar al documento
@@ -237,9 +241,8 @@ public class InformePdfGenerator {
 
             // Cargar la imagen (firma, sello, etc.)
             Bitmap imagenBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.firma); // cambia por el nombre real
-            ByteArrayOutputStream imgStream = new ByteArrayOutputStream();
-            imagenBitmap.compress(Bitmap.CompressFormat.PNG, 100, imgStream);
-            Image imagen = Image.getInstance(imgStream.toByteArray());
+            byte[] firmaBytes = comprimirImagenDecorativa(imagenBitmap, optimizarFotos);
+            Image imagen = Image.getInstance(firmaBytes);
 
             // Escalar y posicionar
             imagen.scaleToFit(120, 60); // ajusta tamaño según lo que necesites
@@ -249,10 +252,7 @@ public class InformePdfGenerator {
             document.add(imagen);
 
             // Crear párrafo alineado a la derecha
-            Paragraph parrafoInspector = new Paragraph("COMISARIADO ESPAÑOL MARÍTIMO\n" +
-                    "Fdo. Álvaro Pousada López\n" +
-                    "COMISARIO DE AVERÍAS \n" +
-                    "APCAS Nº 9367\n", fontLegalBold);
+            Paragraph parrafoInspector = new Paragraph(context.getString(R.string.report_signature_block), fontLegalBold);
             parrafoInspector.setAlignment(Element.ALIGN_RIGHT);
             document.add(parrafoInspector);
 
@@ -265,6 +265,64 @@ public class InformePdfGenerator {
             return null;
         }
         return file;
+    }
+
+    private static int calcularMaxBytesPorImagen(int totalImagenes, boolean optimizarFotos) {
+        if (!optimizarFotos || totalImagenes <= 0) {
+            return Integer.MAX_VALUE;
+        }
+        int maxBytesTotal = 500_000; // deja margen para el resto del PDF
+        int maxPorImagen = maxBytesTotal / totalImagenes;
+        return Math.max(60_000, maxPorImagen);
+    }
+
+    private static byte[] comprimirImagen(Bitmap bitmap, boolean optimizarFotos, int maxBytes) {
+        if (!optimizarFotos) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+            return baos.toByteArray();
+        }
+
+        int quality = 85;
+        byte[] data = null;
+        while (quality >= 30) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+            data = baos.toByteArray();
+            if (data.length <= maxBytes) {
+                return data;
+            }
+            quality -= 10;
+        }
+        return data != null ? data : new byte[0];
+    }
+
+    private static byte[] comprimirImagenDecorativa(Bitmap bitmap, boolean optimizarFotos) {
+        ByteArrayOutputStream originalStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, originalStream);
+        byte[] original = originalStream.toByteArray();
+
+        if (!optimizarFotos) {
+            return original;
+        }
+
+        int targetBytes = Math.max(1, original.length / 2);
+        byte[] mejor = null;
+
+        for (int quality = 85; quality >= 30; quality -= 5) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+            byte[] candidato = baos.toByteArray();
+
+            if (mejor == null || candidato.length < mejor.length) {
+                mejor = candidato;
+            }
+            if (candidato.length <= targetBytes) {
+                return candidato;
+            }
+        }
+
+        return mejor != null ? mejor : original;
     }
 
     private static PdfPCell getCeldaEtiqueta(String texto) {

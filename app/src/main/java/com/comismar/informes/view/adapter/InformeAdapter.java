@@ -1,8 +1,6 @@
 package com.comismar.informes.view.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +9,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.comismar.informes.R;
 import com.comismar.informes.model.Informe;
+import com.comismar.informes.view.activity.PdfPreviewActivity;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -60,31 +57,36 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Informe informe = informes.get(position);
-        holder.txtReferencia.setText("Referencia: " + informe.referencia);
-        holder.txtTipo.setText("Tipo: " + informe.tipo);
+        holder.txtReferencia.setText(context.getString(R.string.reference_colon, informe.referencia));
+        holder.txtTipo.setText(context.getString(R.string.type_colon, informe.tipo));
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
         String fechaFormateada = formato.format(new Date(informe.timestamp));
-        holder.txtFecha.setText("Fecha: " + fechaFormateada);
+        holder.txtFecha.setText(context.getString(R.string.date_colon, fechaFormateada));
 
         holder.itemView.setOnClickListener(v -> {
-            String rutaPdf = informes.get(position).rutaPdf;
+            int adapterPos = holder.getAdapterPosition();
+            if (adapterPos == RecyclerView.NO_POSITION) {
+                return;
+            }
+            Informe current = informes.get(adapterPos);
+            String rutaPdf = current.rutaPdf;
             if (rutaPdf != null) {
-                File file = new File(rutaPdf);
-                Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
-
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(uri, "application/pdf");
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
+                android.content.Intent intent = new android.content.Intent(context, PdfPreviewActivity.class);
+                intent.putExtra(PdfPreviewActivity.EXTRA_RUTA_PDF, rutaPdf);
+                intent.putExtra(PdfPreviewActivity.EXTRA_INFORME_ID, current.id);
                 context.startActivity(intent);
             } else {
-                Toast.makeText(context, "No se encontró el archivo PDF", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.pdf_not_found, Toast.LENGTH_SHORT).show();
             }
         });
 
         holder.iconoBorrar.setOnClickListener(v -> {
             if (deleteListener != null) {
-                deleteListener.onEliminarInforme(informes.get(position));
+                int adapterPos = holder.getAdapterPosition();
+                if (adapterPos == RecyclerView.NO_POSITION) {
+                    return;
+                }
+                deleteListener.onEliminarInforme(informes.get(adapterPos));
             }
         });
     }

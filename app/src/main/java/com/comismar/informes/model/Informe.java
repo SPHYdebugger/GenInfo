@@ -28,5 +28,40 @@ public class Informe {
     @ColumnInfo(name = "timestamp")
     public long timestamp;
 
+    @ColumnInfo(name = "siniestro")
+    public String siniestro;
+
+    @ColumnInfo(name = "requirente")
+    public String requirente;
+
+    @ColumnInfo(name = "lugar")
+    public String lugar;
+
+    @ColumnInfo(name = "tecnico")
+    public String tecnico;
+
+    @ColumnInfo(name = "nombre_barco")
+    public String nombreBarco;
+
+    @ColumnInfo(name = "matricula")
+    public String matricula;
+
+    @ColumnInfo(name = "danos")
+    public String danos;
+
+    @ColumnInfo(name = "causas")
+    public String causas;
+
+    @ColumnInfo(name = "reserva")
+    public String reserva;
+
+    @ColumnInfo(name = "observaciones")
+    public String observaciones;
+
+    @ColumnInfo(name = "doc_pendiente")
+    public String docPendiente;
+
+    @ColumnInfo(name = "fotos_uris")
+    public String fotosUris;
 
 }

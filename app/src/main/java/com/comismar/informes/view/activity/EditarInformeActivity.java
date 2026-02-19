@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,55 +33,38 @@ import com.comismar.informes.model.Informe;
 import com.comismar.informes.view.adapter.MailSender;
 import com.comismar.informes.view.utils.AppLogger;
 import com.comismar.informes.view.utils.AppSettings;
-import com.comismar.informes.view.utils.CustomFooter;
-import com.comismar.informes.view.utils.CustomHeader;
 import com.comismar.informes.view.utils.InformePdfGenerator;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.LineSeparator;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class GenerarInformeActivity extends Activity {
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class EditarInformeActivity extends Activity {
+
+    public static final String EXTRA_INFORME_ID = "informeId";
 
     private EditText inputReferencia, inputLugar;
     private Button btnAdjuntarFotos, btnGenerarInforme, btnBack;
-
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_IMAGE_GALLERY = 2;
     private LinearLayout layoutImagenesAdjuntas;
     private TextView textAdjuntos;
-
     private CheckBox checkboxEnviarPdf;
     private View overlayBloqueo;
 
-    private static final int TOAST_SHORT_MS = 2000;
-    private final Handler uiHandler = new Handler(Looper.getMainLooper());
-
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private static final int TOAST_SHORT_MS = 2000;
+
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
 
     private List<Uri> imagenesAdjuntas = new ArrayList<>();
     private Uri uriFotoActual;
+
+    private Informe informeOriginal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,93 +72,110 @@ public class GenerarInformeActivity extends Activity {
         setContentView(R.layout.activity_generar_informe);
 
         inputReferencia = findViewById(R.id.inputReferencia);
-
         inputLugar = findViewById(R.id.inputLugar);
         btnAdjuntarFotos = findViewById(R.id.btnAdjuntarFotos);
         btnGenerarInforme = findViewById(R.id.btnGenerarInforme);
         btnBack = findViewById(R.id.btnBack);
-        btnAdjuntarFotos.setOnClickListener(v -> mostrarDialogoFuenteImagen());
         layoutImagenesAdjuntas = findViewById(R.id.layoutImagenesAdjuntas);
         textAdjuntos = findViewById(R.id.textAdjuntos);
         checkboxEnviarPdf = findViewById(R.id.checkboxEnviarPdf);
         overlayBloqueo = findViewById(R.id.overlayBloqueo);
 
+        btnGenerarInforme.setText(R.string.modify_report);
+
+        int informeId = getIntent().getIntExtra(EXTRA_INFORME_ID, -1);
+        informeOriginal = AppDatabase.getInstance(getApplicationContext()).informeDao().obtenerPorId(informeId);
+        if (informeOriginal == null) {
+            AppLogger.logError(this, "EditarInformeActivity", "No se pudo cargar informe para editar", null);
+            Toast.makeText(this, R.string.report_not_found, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        precargarDatos(informeOriginal);
+
         btnAdjuntarFotos.setOnClickListener(v -> mostrarDialogoFuenteImagen());
+        btnGenerarInforme.setOnClickListener(v -> onModificarInforme());
+        btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(EditarInformeActivity.this, ListaInformesActivity.class);
+            startActivity(intent);
+            finish();
+        });
+    }
 
-        btnGenerarInforme.setOnClickListener(v -> {
-            String referencia = inputReferencia.getText().toString().trim();
-            String siniestro = ((EditText) findViewById(R.id.inputSiniestro)).getText().toString().trim();
-            String lugar = inputLugar.getText().toString().trim();
+    private void precargarDatos(Informe informe) {
+        ((EditText) findViewById(R.id.inputSiniestro)).setText(informe.siniestro);
+        ((EditText) findViewById(R.id.inputRequirente)).setText(informe.requirente);
+        ((EditText) findViewById(R.id.inputTecnico)).setText(informe.tecnico);
+        ((EditText) findViewById(R.id.inputNombreBarco)).setText(informe.nombreBarco);
+        ((EditText) findViewById(R.id.inputMatricula)).setText(informe.matricula);
+        ((EditText) findViewById(R.id.inputDaños)).setText(informe.danos);
+        ((EditText) findViewById(R.id.inputCausas)).setText(informe.causas);
+        ((EditText) findViewById(R.id.inputReserva)).setText(informe.reserva);
+        ((EditText) findViewById(R.id.inputObservaciones)).setText(informe.observaciones);
+        ((EditText) findViewById(R.id.inputDocP)).setText(informe.docPendiente);
+        inputReferencia.setText(informe.referencia);
+        inputLugar.setText(informe.lugar);
 
-            // Validar campos obligatorios
-            if (referencia.isEmpty() || siniestro.isEmpty() || lugar.isEmpty()) {
-                StringBuilder mensaje = new StringBuilder(getString(R.string.required_fields_intro));
-                if (referencia.isEmpty())
-                    mensaje.append(getString(R.string.required_reference));
-                if (siniestro.isEmpty())
-                    mensaje.append(getString(R.string.required_incident));
-                if (lugar.isEmpty())
-                    mensaje.append(getString(R.string.required_place));
+        imagenesAdjuntas = deserializarUris(informe.fotosUris);
+        actualizarListaImagenes();
+    }
 
-                new AlertDialog.Builder(this, R.style.AppDialogTheme)
-                        .setTitle(R.string.required_fields_title)
-                        .setMessage(mensaje.toString())
-                        .setPositiveButton(R.string.close, null)
-                        .show();
-                return; // ⛔ No continuar
-            }
+    private void onModificarInforme() {
+        String referencia = inputReferencia.getText().toString().trim();
+        String siniestro = ((EditText) findViewById(R.id.inputSiniestro)).getText().toString().trim();
+        String lugar = inputLugar.getText().toString().trim();
 
-            // Si todo está bien, mostrar confirmación
-            int numeroFotos = imagenesAdjuntas.size();
-            String mensaje = getString(R.string.confirm_create_report, referencia) + "\n" +
-                    (numeroFotos > 0 ? getString(R.string.with_attached_photos, numeroFotos) : getString(R.string.without_photos));
+        if (referencia.isEmpty() || siniestro.isEmpty() || lugar.isEmpty()) {
+            StringBuilder mensaje = new StringBuilder(getString(R.string.required_fields_intro));
+            if (referencia.isEmpty())
+                mensaje.append(getString(R.string.required_reference));
+            if (siniestro.isEmpty())
+                mensaje.append(getString(R.string.required_incident));
+            if (lugar.isEmpty())
+                mensaje.append(getString(R.string.required_place));
 
             new AlertDialog.Builder(this, R.style.AppDialogTheme)
-                    .setTitle(R.string.confirm_create_report_title)
-                    .setMessage(mensaje)
-                    .setPositiveButton(R.string.create, (dialog, which) -> mostrarDialogoOptimizacion())
-                    .setNegativeButton(R.string.cancel_upper, null)
+                    .setTitle(R.string.required_fields_title)
+                    .setMessage(mensaje.toString())
+                    .setPositiveButton(R.string.close, null)
                     .show();
-        });
+            return;
+        }
 
-        btnBack.setOnClickListener(v -> {
-            Intent intent = new Intent(GenerarInformeActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
+        int numeroFotos = imagenesAdjuntas.size();
+        String mensaje = getString(R.string.confirm_modify_report, referencia) + "\n" +
+                (numeroFotos > 0 ? getString(R.string.with_attached_photos, numeroFotos) : getString(R.string.without_photos));
 
+        new AlertDialog.Builder(this, R.style.AppDialogTheme)
+                .setTitle(R.string.confirm_modify_report_title)
+                .setMessage(mensaje)
+                .setPositiveButton(R.string.continue_upper, (dialog, which) -> mostrarDialogoOptimizacion())
+                .setNegativeButton(R.string.cancel_upper, null)
+                .show();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        ArrayList<String> uriStrings = new ArrayList<>();
-        for (Uri uri : imagenesAdjuntas) {
-            uriStrings.add(uri.toString());
-        }
-        outState.putStringArrayList("imagenesAdjuntas", uriStrings);
-        if (uriFotoActual != null) {
-            outState.putString("uriFotoActual", uriFotoActual.toString());
-        }
+    private void mostrarDialogoOptimizacion() {
+        String mensaje = getString(R.string.optimize_photos_message);
+        new AlertDialog.Builder(this, R.style.AppDialogTheme)
+                .setTitle(R.string.optimize_photos_title)
+                .setMessage(mensaje)
+                .setPositiveButton(R.string.yes_upper, (dialog, which) -> mostrarDialogoSobrescribir(true))
+                .setNegativeButton(R.string.no_upper, (dialog, which) -> mostrarDialogoSobrescribir(false))
+                .show();
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        ArrayList<String> uriStrings = savedInstanceState.getStringArrayList("imagenesAdjuntas");
-        if (uriStrings != null) {
-            imagenesAdjuntas.clear();
-            for (String s : uriStrings) {
-                imagenesAdjuntas.add(Uri.parse(s));
-            }
-            actualizarListaImagenes();
-        }
-
-        if (savedInstanceState.containsKey("uriFotoActual")) {
-            uriFotoActual = Uri.parse(savedInstanceState.getString("uriFotoActual"));
-        }
+    private void mostrarDialogoSobrescribir(boolean optimizarFotos) {
+        String mensaje = getString(R.string.overwrite_or_copy_message);
+        new AlertDialog.Builder(this, R.style.AppDialogTheme)
+                .setTitle(R.string.save_changes_title)
+                .setMessage(mensaje)
+                .setPositiveButton(R.string.overwrite, (dialog, which) -> procesarModificacion(optimizarFotos, true))
+                .setNegativeButton(R.string.copy, (dialog, which) -> procesarModificacion(optimizarFotos, false))
+                .show();
     }
 
-    private void generarInforme(boolean optimizarFotos) {
+    private void procesarModificacion(boolean optimizarFotos, boolean sobrescribir) {
         setOverlayVisible(true);
         Toast.makeText(this, R.string.generating_pdf, Toast.LENGTH_SHORT).show();
 
@@ -185,7 +184,7 @@ public class GenerarInformeActivity extends Activity {
         String tecnico = ((EditText) findViewById(R.id.inputTecnico)).getText().toString();
         String nombreBarco = ((EditText) findViewById(R.id.inputNombreBarco)).getText().toString();
         String matricula = ((EditText) findViewById(R.id.inputMatricula)).getText().toString();
-        String daños = ((EditText) findViewById(R.id.inputDaños)).getText().toString();
+        String danos = ((EditText) findViewById(R.id.inputDaños)).getText().toString();
         String docP = ((EditText) findViewById(R.id.inputDocP)).getText().toString();
         String causas = ((EditText) findViewById(R.id.inputCausas)).getText().toString();
         String reserva = ((EditText) findViewById(R.id.inputReserva)).getText().toString();
@@ -204,51 +203,102 @@ public class GenerarInformeActivity extends Activity {
                 tecnico,
                 nombreBarco,
                 matricula,
-                daños,
+                danos,
                 causas,
                 reserva,
                 observaciones,
                 docP,
                 imagenesAdjuntas,
                 optimizarFotos);
+
         if (pdfGenerado == null) {
-            AppLogger.logError(this, "GenerarInformeActivity", "No se pudo guardar un informe (pdf null)", null);
-            Toast.makeText(this, R.string.error_saving_report, Toast.LENGTH_SHORT).show();
+            AppLogger.logError(this, "EditarInformeActivity", "No se pudo guardar un informe (pdf null)", null);
+            Toast.makeText(this, R.string.error_generating_pdf, Toast.LENGTH_SHORT).show();
             setOverlayVisible(false);
             return;
         }
 
-        // Guardar en la base de datos
-        Informe nuevoInforme = new Informe();
-        nuevoInforme.tipo = nombreBarco;
-        nuevoInforme.referencia = referencia;
-        nuevoInforme.trabajo = siniestro;
-        nuevoInforme.descripcion = daños;
-        nuevoInforme.timestamp = System.currentTimeMillis();
-        nuevoInforme.rutaPdf = pdfGenerado.getAbsolutePath();
-        nuevoInforme.siniestro = siniestro;
-        nuevoInforme.requirente = requirente;
-        nuevoInforme.lugar = lugar;
-        nuevoInforme.tecnico = tecnico;
-        nuevoInforme.nombreBarco = nombreBarco;
-        nuevoInforme.matricula = matricula;
-        nuevoInforme.danos = daños;
-        nuevoInforme.causas = causas;
-        nuevoInforme.reserva = reserva;
-        nuevoInforme.observaciones = observaciones;
-        nuevoInforme.docPendiente = docP;
-        nuevoInforme.fotosUris = serializarUris(imagenesAdjuntas);
-
-        try {
-            AppDatabase db = AppDatabase.getInstance(getApplicationContext());
-            db.informeDao().insertar(nuevoInforme);
-        } catch (Exception e) {
-            AppLogger.logError(this, "GenerarInformeActivity", "No se pudo guardar un informe (insert DB)", e);
-            Toast.makeText(this, R.string.error_saving_report, Toast.LENGTH_SHORT).show();
-            setOverlayVisible(false);
-            return;
+        String mensajeResultado;
+        String sufijoReferencia = sobrescribir ? " MOD" : " COP";
+        File destinoPdf = construirPdfDestino(pdfGenerado, sobrescribir);
+        if (destinoPdf != null && !destinoPdf.equals(pdfGenerado)) {
+            if (destinoPdf.exists()) {
+                destinoPdf.delete();
+            }
+            boolean renombrado = pdfGenerado.renameTo(destinoPdf);
+            if (renombrado) {
+                pdfGenerado = destinoPdf;
+            }
         }
 
+        if (sobrescribir) {
+            if (informeOriginal.rutaPdf != null) {
+                File archivo = new File(informeOriginal.rutaPdf);
+                if (archivo.exists()) {
+                    archivo.delete();
+                }
+            }
+            informeOriginal.tipo = nombreBarco;
+            informeOriginal.referencia = aplicarSufijoCorto(referencia, sufijoReferencia);
+            informeOriginal.trabajo = siniestro;
+            informeOriginal.descripcion = danos;
+            informeOriginal.timestamp = System.currentTimeMillis();
+            informeOriginal.rutaPdf = pdfGenerado.getAbsolutePath();
+            informeOriginal.siniestro = siniestro;
+            informeOriginal.requirente = requirente;
+            informeOriginal.lugar = lugar;
+            informeOriginal.tecnico = tecnico;
+            informeOriginal.nombreBarco = nombreBarco;
+            informeOriginal.matricula = matricula;
+            informeOriginal.danos = danos;
+            informeOriginal.causas = causas;
+            informeOriginal.reserva = reserva;
+            informeOriginal.observaciones = observaciones;
+            informeOriginal.docPendiente = docP;
+            informeOriginal.fotosUris = serializarUris(imagenesAdjuntas);
+
+            try {
+                AppDatabase.getInstance(getApplicationContext()).informeDao().actualizar(informeOriginal);
+            } catch (Exception e) {
+                AppLogger.logError(this, "EditarInformeActivity", "No se pudo guardar un informe (update DB)", e);
+                Toast.makeText(this, R.string.error_saving_report, Toast.LENGTH_SHORT).show();
+                setOverlayVisible(false);
+                return;
+            }
+            mensajeResultado = getString(R.string.report_modified);
+        } else {
+            Informe nuevoInforme = new Informe();
+            nuevoInforme.tipo = nombreBarco;
+            nuevoInforme.referencia = aplicarSufijoCorto(referencia, sufijoReferencia);
+            nuevoInforme.trabajo = siniestro;
+            nuevoInforme.descripcion = danos;
+            nuevoInforme.timestamp = System.currentTimeMillis();
+            nuevoInforme.rutaPdf = pdfGenerado.getAbsolutePath();
+            nuevoInforme.siniestro = siniestro;
+            nuevoInforme.requirente = requirente;
+            nuevoInforme.lugar = lugar;
+            nuevoInforme.tecnico = tecnico;
+            nuevoInforme.nombreBarco = nombreBarco;
+            nuevoInforme.matricula = matricula;
+            nuevoInforme.danos = danos;
+            nuevoInforme.causas = causas;
+            nuevoInforme.reserva = reserva;
+            nuevoInforme.observaciones = observaciones;
+            nuevoInforme.docPendiente = docP;
+            nuevoInforme.fotosUris = serializarUris(imagenesAdjuntas);
+
+            try {
+                AppDatabase.getInstance(getApplicationContext()).informeDao().insertar(nuevoInforme);
+            } catch (Exception e) {
+                AppLogger.logError(this, "EditarInformeActivity", "No se pudo guardar un informe (insert DB copia)", e);
+                Toast.makeText(this, R.string.error_saving_report, Toast.LENGTH_SHORT).show();
+                setOverlayVisible(false);
+                return;
+            }
+            mensajeResultado = getString(R.string.copy_created);
+        }
+
+        final File pdfAdjunto = pdfGenerado;
         if (enviarPorCorreo) {
             final String destinatario = AppSettings.getRecipientEmail(this);
             new Thread(() -> {
@@ -259,42 +309,55 @@ public class GenerarInformeActivity extends Activity {
                             getString(R.string.email_body_report),
                             "infogenpdf@gmail.com",
                             destinatario,
-                            pdfGenerado);
+                            pdfAdjunto);
                     runOnUiThread(() -> mostrarToastsEnCadena(
-                            new String[] { getString(R.string.report_added_to_list), getString(R.string.pdf_sent_email) },
+                            new String[] { mensajeResultado, getString(R.string.pdf_sent_email) },
                             () -> {
                                 setOverlayVisible(false);
-                                volverAlInicio();
+                                volverAListado();
                             }));
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    AppLogger.logError(this, "GenerarInformeActivity", "No se pudo enviar informe por mail", e);
+                    AppLogger.logError(this, "EditarInformeActivity", "No se pudo enviar informe por mail", e);
                     runOnUiThread(() -> mostrarToastsEnCadena(
-                            new String[] { getString(R.string.report_added_to_list), getString(R.string.error_sending_pdf) },
+                            new String[] { mensajeResultado, getString(R.string.error_sending_pdf) },
                             () -> {
                                 setOverlayVisible(false);
-                                volverAlInicio();
+                                volverAListado();
                             }));
                 }
             }).start();
         } else {
             mostrarToastsEnCadena(
-                    new String[] { getString(R.string.report_added_to_list) },
+                    new String[] { mensajeResultado },
                     () -> {
                         setOverlayVisible(false);
-                        volverAlInicio();
+                        volverAListado();
                     });
         }
     }
 
-    private void mostrarDialogoOptimizacion() {
-        String mensaje = getString(R.string.optimize_photos_message);
-        new AlertDialog.Builder(this, R.style.AppDialogTheme)
-                .setTitle(R.string.optimize_photos_title)
-                .setMessage(mensaje)
-                .setPositiveButton(R.string.yes_upper, (dialog, which) -> generarInforme(true))
-                .setNegativeButton(R.string.no_upper, (dialog, which) -> generarInforme(false))
-                .show();
+    private String aplicarSufijoCorto(String referencia, String sufijo) {
+        if (referencia == null) return "";
+        if (referencia.endsWith(sufijo)) return referencia;
+        return referencia + sufijo;
+    }
+
+    private File construirPdfDestino(File pdfGenerado, boolean sobrescribir) {
+        if (pdfGenerado == null) return null;
+        String baseOriginal = obtenerNombreBase(informeOriginal != null ? informeOriginal.rutaPdf : null);
+        if (baseOriginal == null || baseOriginal.isEmpty()) {
+            baseOriginal = "informe_" + System.currentTimeMillis();
+        }
+        String sufijo = sobrescribir ? "_MOD" : "_COP";
+        return new File(pdfGenerado.getParentFile(), baseOriginal + sufijo + ".pdf");
+    }
+
+    private String obtenerNombreBase(String ruta) {
+        if (ruta == null || ruta.trim().isEmpty()) return null;
+        File f = new File(ruta);
+        String name = f.getName();
+        int dot = name.lastIndexOf('.');
+        return dot > 0 ? name.substring(0, dot) : name;
     }
 
     @Override
@@ -355,8 +418,6 @@ public class GenerarInformeActivity extends Activity {
                                         REQUEST_CAMERA_PERMISSION);
                             }
                         } else {
-                            // En versiones anteriores a Android 6, el permiso se concede automáticamente al
-                            // instalar
                             abrirCamara();
                         }
 
@@ -408,8 +469,7 @@ public class GenerarInformeActivity extends Activity {
     private File crearArchivoImagen() throws IOException {
         String nombreArchivo = "foto_" + System.currentTimeMillis();
         File almacenamientoDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imagen = File.createTempFile(nombreArchivo, ".jpg", almacenamientoDir);
-        return imagen;
+        return File.createTempFile(nombreArchivo, ".jpg", almacenamientoDir);
     }
 
     private Uri copiarImagenAApp(Uri origen) {
@@ -452,9 +512,8 @@ public class GenerarInformeActivity extends Activity {
             contenedor.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
-            contenedor.setGravity(Gravity.CENTER_VERTICAL); // ✅ centra verticalmente
+            contenedor.setGravity(Gravity.CENTER_VERTICAL);
 
-            // Miniatura
             ImageView miniatura = new ImageView(this);
             miniatura.setLayoutParams(new LinearLayout.LayoutParams(100, 100));
             miniatura.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -470,28 +529,23 @@ public class GenerarInformeActivity extends Activity {
                 e.printStackTrace();
             }
 
-            // Nombre del archivo
             TextView nombre = new TextView(this);
             nombre.setText(obtenerNombreArchivoDesdeUri(uri));
             nombre.setTextSize(14);
             nombre.setPadding(16, 0, 0, 0);
             nombre.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
-            // Botón eliminar
             ImageView btnEliminar = new ImageView(this);
             btnEliminar.setImageResource(android.R.drawable.ic_menu_delete);
             btnEliminar.setPadding(16, 0, 16, 0);
             btnEliminar.setOnClickListener(v -> {
                 imagenesAdjuntas.remove(uri);
-                actualizarListaImagenes(); // recargar visualización
+                actualizarListaImagenes();
             });
 
-            // Agregar a contenedor
             contenedor.addView(miniatura);
             contenedor.addView(nombre);
             contenedor.addView(btnEliminar);
-
-            // Añadir al layout principal
             layoutImagenesAdjuntas.addView(contenedor);
         }
     }
@@ -514,21 +568,11 @@ public class GenerarInformeActivity extends Activity {
         return nombre;
     }
 
-    private void volverAlInicio() {
-        Intent intent = new Intent(GenerarInformeActivity.this, MainActivity.class);
+    private void volverAListado() {
+        Intent intent = new Intent(EditarInformeActivity.this, ListaInformesActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
-    }
-
-    private String serializarUris(List<Uri> uris) {
-        JSONArray array = new JSONArray();
-        if (uris != null) {
-            for (Uri uri : uris) {
-                array.put(uri.toString());
-            }
-        }
-        return array.toString();
     }
 
     private void mostrarToastsEnCadena(String[] mensajes, Runnable onFinish) {
@@ -571,4 +615,26 @@ public class GenerarInformeActivity extends Activity {
         focus.clearFocus();
     }
 
+    private String serializarUris(List<Uri> uris) {
+        JSONArray array = new JSONArray();
+        if (uris != null) {
+            for (Uri uri : uris) {
+                array.put(uri.toString());
+            }
+        }
+        return array.toString();
+    }
+
+    private List<Uri> deserializarUris(String json) {
+        List<Uri> result = new ArrayList<>();
+        if (json == null || json.trim().isEmpty()) return result;
+        try {
+            JSONArray array = new JSONArray(json);
+            for (int i = 0; i < array.length(); i++) {
+                result.add(Uri.parse(array.getString(i)));
+            }
+        } catch (JSONException ignored) {
+        }
+        return result;
+    }
 }

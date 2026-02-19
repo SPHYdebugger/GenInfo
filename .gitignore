@@ -1,0 +1,35 @@
+# Gradle
+.gradle/
+build/
+**/build/
+**/out/
+
+# Android
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+*.iml
+local.properties
+keystore.properties
+*.jks
+*.keystore
+**/release/
+**/debug/
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+*.swp
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log

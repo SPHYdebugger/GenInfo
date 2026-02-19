@@ -4,8 +4,10 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Informe.class}, version = 1)
+@Database(entities = {Informe.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract InformeDao informeDao();
 
@@ -16,8 +18,27 @@ public abstract class AppDatabase extends RoomDatabase {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "comismar_db")
                     .allowMainThreadQueries() // ⚠️ SOLO para pruebas
+                    .addMigrations(MIGRATION_1_2)
                     .build();
         }
         return INSTANCE;
     }
+
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE informes ADD COLUMN siniestro TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN requirente TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN lugar TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN tecnico TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN nombre_barco TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN matricula TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN danos TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN causas TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN reserva TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN observaciones TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN doc_pendiente TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN fotos_uris TEXT");
+        }
+    };
 }

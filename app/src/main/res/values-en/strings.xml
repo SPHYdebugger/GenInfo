@@ -1,0 +1,182 @@
+<resources>
+    <string name="app_name">GenINFOR</string>
+    <string name="splash_version">GenInfor v3.0</string>
+
+    <string name="generate_report">GENERATE REPORT</string>
+    <string name="view_reports">VIEW REPORTS</string>
+    <string name="back_to_menu">BACK TO MENU</string>
+    <string name="privacy_link">Privacy Policy</string>
+    <string name="contact_link">Contact Details</string>
+    <string name="modify_report">MODIFY REPORT</string>
+    <string name="open">OPEN</string>
+    <string name="edit">EDIT</string>
+    <string name="preview_title">Preview</string>
+
+    <string name="field_reference_intervention">INTERVENTION REFERENCE</string>
+    <string name="field_incident">INCIDENT</string>
+    <string name="field_requester">REQUESTER</string>
+    <string name="field_place">PLACE</string>
+    <string name="field_people_present">PEOPLE PRESENT</string>
+    <string name="field_boat_name">BOAT NAME</string>
+    <string name="field_registration">REGISTRATION</string>
+    <string name="field_damage">DAMAGE</string>
+    <string name="field_causes">CAUSES</string>
+    <string name="field_reserve">RESERVE</string>
+    <string name="field_observations">OBSERVATIONS</string>
+    <string name="field_pending_docs">PENDING DOCUMENTATION</string>
+    <string name="attached_images">Attached images:</string>
+    <string name="attach_photos">ATTACH PHOTOS</string>
+    <string name="send_pdf_auto_email">Send PDF automatically by email</string>
+
+    <string name="required_fields_intro">You must complete the following fields:\n</string>
+    <string name="required_reference">- REFERENCE\n</string>
+    <string name="required_incident">- INCIDENT\n</string>
+    <string name="required_place">- PLACE\n</string>
+    <string name="required_fields_title">Required fields</string>
+    <string name="close">Close</string>
+    <string name="confirm_create_report_title">Confirm report creation</string>
+    <string name="confirm_create_report">Are you sure you want to create report %1$s?</string>
+    <string name="confirm_modify_report_title">Confirm modification</string>
+    <string name="confirm_modify_report">Are you sure you want to modify report %1$s?</string>
+    <string name="with_attached_photos">With %1$d attached photo(s).</string>
+    <string name="without_photos">Without attached photos.</string>
+    <string name="create">CREATE</string>
+    <string name="continue_upper">CONTINUE</string>
+    <string name="cancel_upper">CANCEL</string>
+    <string name="yes_upper">YES</string>
+    <string name="no_upper">NO</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="generating_pdf">Generating PDF...</string>
+    <string name="error_saving_report">Error saving report</string>
+    <string name="error_generating_pdf">Error generating PDF</string>
+    <string name="report_added_to_list">Report added to list</string>
+    <string name="pdf_sent_email">PDF sent by email</string>
+    <string name="error_sending_pdf">Error sending PDF</string>
+    <string name="email_subject_report">AUTOIntervention report: %1$s</string>
+    <string name="email_body_report">Attached is the report generated with GenInfor v1.0.</string>
+
+    <string name="optimize_photos_title">Optimize photos</string>
+    <string name="optimize_photos_message">Do you want to optimize photos so the generated PDF is as small as possible?\nIf you choose \"YES\", photo dimensions are kept but weight is compressed.</string>
+    <string name="report_page_prefix">Page</string>
+    <string name="report_date_long_pattern">MMMM d, yyyy</string>
+    <string name="report_date_time_pattern">MM/dd/yyyy HH:mm</string>
+    <string name="report_title">PRELIMINARY EERR REPORT</string>
+    <string name="report_vertical_revision">Rev.: %1$s - This document is the property of COMISMAR, S.A. and is strictly confidential. It may not be used or distributed without express authorization from company management.</string>
+    <string name="report_section_1">1. INTERVENTION DATA</string>
+    <string name="report_section_2">2. INSPECTION</string>
+    <string name="report_section_3">3. VESSEL</string>
+    <string name="report_section_4">4. DAMAGE</string>
+    <string name="report_section_5">5. CAUSES</string>
+    <string name="report_section_6">6. RESERVE</string>
+    <string name="report_section_7">7. OBSERVATIONS</string>
+    <string name="report_section_pending_docs">PENDING DOCUMENTATION</string>
+    <string name="report_label_reference">Reference</string>
+    <string name="report_label_incident">Incident</string>
+    <string name="report_label_requester">Requester</string>
+    <string name="report_label_date">Date</string>
+    <string name="report_label_place">Place</string>
+    <string name="report_label_technician">Intervention Technician</string>
+    <string name="report_default_technician">Álvaro Pousada López     COMISMAR S.A.</string>
+    <string name="report_label_other_people">Other people</string>
+    <string name="report_label_boat_name">Vessel name</string>
+    <string name="report_label_registration">Registration</string>
+    <string name="report_attached_images">ATTACHED IMAGES</string>
+    <string name="report_no_attached_photos">No photos have been attached</string>
+    <string name="report_legal_text">This report, due to its exclusively technical nature, is issued without prejudging questions of law and/or liability of any interested parties, and subject to the conditions established in the Insurance Policy.\n\nFurthermore, for the purposes of Article 335 of the Spanish Civil Procedure Act 1/2000, the undersigned Mr. Álvaro Pousada López, in his capacity as EXPERT, declares under oath or promise to tell the truth that he has acted and, where applicable, will act with the greatest possible objectivity, taking into consideration both what may favor and what may be liable to cause harm to any of the parties, and that he is aware of the criminal penalties he may incur if he fails to fulfill his duty as an expert.\n\nIn accordance with data protection regulations, we inform you that for any personal data included in this report, rights of access, rectification, objection, and cancellation may be exercised before COMISMAR, S.A., located at Pintor Juan Gris Street, no. 4 - 28020 - Madrid.</string>
+    <string name="report_location_date">In %1$s, %2$s</string>
+    <string name="report_signature_block">SPANISH MARITIME COMMISSIONER\nSigned: Álvaro Pousada López\nAVERAGE ADJUSTER\nAPCAS No. 9367\n</string>
+    <string name="overwrite_or_copy_message">Do you want to overwrite the original report or create a copy?</string>
+    <string name="save_changes_title">Save changes</string>
+    <string name="overwrite">OVERWRITE</string>
+    <string name="copy">COPY</string>
+    <string name="report_modified">Report modified</string>
+    <string name="copy_created">Copy created</string>
+
+    <string name="photo_taken">Photo taken</string>
+    <string name="photo_selected">Photo selected</string>
+    <string name="photos_selected_count">%1$d photo(s) selected</string>
+    <string name="max_4_images">You can only attach up to 4 images</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="attach_photo_title">Attach Photo</string>
+    <string name="camera_permission_denied">Camera permission denied</string>
+    <string name="select_images">Select images</string>
+    <string name="photo_access_lost">Could not access one photo. Please select it again.</string>
+    <string name="image_label">Image</string>
+
+    <string name="pdf_not_found">PDF file not found</string>
+    <string name="report_not_found">Report not found</string>
+    <string name="error_open_pdf">Error opening PDF</string>
+    <string name="no_pdf_viewer">No PDF viewer available</string>
+
+    <string name="reference">Reference</string>
+    <string name="type">Type</string>
+    <string name="date">Date</string>
+    <string name="reference_colon">Reference: %1$s</string>
+    <string name="type_colon">Type: %1$s</string>
+    <string name="date_colon">Date: %1$s</string>
+    <string name="delete_report">Delete report</string>
+    <string name="delete_report_confirm">Are you sure you want to delete this report?</string>
+    <string name="report_deleted">Report deleted</string>
+    <string name="reports_found_count">Reports found: %1$d</string>
+    <string name="error_loading_reports">Error loading reports</string>
+    <string name="no_reports_generated">No generated reports</string>
+
+    <string name="app_logs_title">APP LOGS</string>
+    <string name="clear_logs">CLEAR LOGS</string>
+    <string name="logs_cleared">Logs cleared</string>
+    <string name="no_logs">No logs.</string>
+    <string name="error_reading_logs">Error reading logs: %1$s</string>
+
+    <string name="settings_title">SETTINGS</string>
+    <string name="settings_adjust_email">SET RECIPIENT EMAIL</string>
+    <string name="settings_view_logs">VIEW LOGS</string>
+    <string name="settings_privacy_policy">PRIVACY POLICY</string>
+    <string name="settings_contact_data">CONTACT DETAILS</string>
+    <string name="settings_change_language">CHANGE LANGUAGE (ES/EN)</string>
+    <string name="settings_delete_all_data">DELETE ALL DATA</string>
+    <string name="common_back">BACK</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="current_email">Current email: %1$s</string>
+    <string name="recipient_account_title">Recipient account</string>
+    <string name="recipient_account_message">Enter the new recipient email:</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="email_updated">Email updated</string>
+
+    <string name="delete_data_warning">All app data will be deleted</string>
+    <string name="delete_data_title">Delete all data</string>
+    <string name="delete_data_message">This will delete reports, PDFs, photos, and logs. Continue?</string>
+    <string name="delete_action">DELETE</string>
+    <string name="data_deleted">Data deleted</string>
+    <string name="delete_error">Error deleting data</string>
+
+    <string name="language_changed_es">Idioma cambiado a castellano</string>
+    <string name="language_changed_en">Language changed to English</string>
+
+    <string name="contact_title">Contact Details</string>
+    <string name="privacy_title">Privacy Policy</string>
+    <string name="document_separator">\n\n--------------------------------\n\n</string>
+
+    <string name="contact_body">Developer: Santiago Perez Hernandez\nEmail: infogenpdf@gmail.com\n\nAbout the app\nGenInfor generates PDF reports with photos, stores them locally, and can send them by email.\n\nData collected\nNo personal data is collected for analytics or advertising.\n\nData storage\nReports and data are stored locally on the device.\n\nThird-party sharing\nNo commercial third-party sharing.\n\nContact\nFor any questions, email infogenpdf@gmail.com.\n\nData deletion\nYou can remove data from app settings or by uninstalling the app.</string>
+
+    <string name="privacy_body">GenInfor\n\nLast updated: February 13, 2026\n\n1. Data controller\nName: Santiago Perez Hernandez\nContact email: infogenpdf@gmail.com\n\n2. Personal data processed\nThe app does not require sign-up and does not collect identifiers for commercial purposes.\nReport data entered by users is stored locally on the device.\n\n3. Purpose\nGenerate PDF intervention reports with attached photos.\n\n4. Legal basis\nVoluntary use of the app.\n\n5. Storage\nData is stored locally on the device.\n\n6. Third-party sharing\nNo advertising or analytics sharing.\n\n7. Permissions\nCamera/gallery may be used for photos, and internet is used only when email sending is requested.\n\n8. User rights and deletion\nData can be deleted from system settings, app settings menu, or by uninstalling the app.\n\n9. Policy updates\nThis policy may be updated for legal or functional changes.</string>
+    <string name="login_button">LOG IN</string>
+    <string name="remember_credentials">Remember credentials</string>
+    <string name="close_app">CLOSE APP</string>
+    <string name="login_user">User</string>
+    <string name="login_password">Password</string>
+    <string name="enter">ENTER</string>
+    <string name="login_invalid_credentials">Invalid user or password</string>
+    <string name="login_close_confirm">Press CLOSE APP again to exit</string>
+    <string name="logout">LOGOUT</string>
+    <string name="logout_confirm_message">Are you sure you want to log out? Next time you will need your credentials to access.</string>
+    <string name="accept_upper">ACCEPT</string>
+</resources>
+
+
+
+

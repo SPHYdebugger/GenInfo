@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 public class CustomFooter extends PdfPageEventHelper {
 
     private Image footerLogo;
+    private String pagePrefix = "Página";
 
     public CustomFooter(Bitmap footerBitmap) {
         try {
@@ -17,6 +18,21 @@ public class CustomFooter extends PdfPageEventHelper {
             this.footerLogo = Image.getInstance(stream.toByteArray());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public CustomFooter(byte[] footerBytes) {
+        try {
+            this.footerLogo = Image.getInstance(footerBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public CustomFooter(byte[] footerBytes, String pagePrefix) {
+        this(footerBytes);
+        if (pagePrefix != null && !pagePrefix.trim().isEmpty()) {
+            this.pagePrefix = pagePrefix;
         }
     }
 
@@ -47,7 +63,7 @@ public class CustomFooter extends PdfPageEventHelper {
 
             // Número de página sobre la imagen (abajo a la derecha)
             Font pageFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.WHITE);
-            Phrase pageNumber = new Phrase("Página " + writer.getPageNumber(), pageFont);
+            Phrase pageNumber = new Phrase(pagePrefix + " " + writer.getPageNumber(), pageFont);
 
             ColumnText.showTextAligned(
                     canvas,

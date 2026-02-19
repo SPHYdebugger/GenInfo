@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#0D77AA">
 
-    <!-- HEADER: Imagen a lo ancho arriba -->
     <ImageView
         android:id="@+id/headerImage"
         android:layout_width="0dp"
@@ -16,7 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- CONTENEDOR DE BOTONES: centrado en la pantalla -->
     <LinearLayout
         android:id="@+id/botonera"
         android:layout_width="wrap_content"
@@ -24,7 +22,7 @@
         android:layout_marginTop="24dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/footerLinks"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerImage">
@@ -35,17 +33,76 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:backgroundTint="#015987"
-            android:text="GENERAR INFORME"
+            android:text="@string/generate_report"
             android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btnVerInformes"
-            android:layout_width="match_parent"
+            android:layout_width="275dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:backgroundTint="#015987"
-            android:text="VER INFORMES"
+            android:text="@string/view_reports"
             android:textColor="@android:color/white" />
 
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="#015987"
+            android:text="@string/logout"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnCerrarApp"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#015987"
+            android:text="@string/close_app"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/footerLinks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/txtPoliticaPrivacidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/privacy_link"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:text="/"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txtDatosContacto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/contact_link"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

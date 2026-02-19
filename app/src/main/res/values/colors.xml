@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="comismar_blue">#003366</color>
+    <color name="dialog_background">#FFFFFF</color>
+    <color name="dialog_title">#003366</color>
+    <color name="dialog_message">#333333</color>
+    <color name="dialog_button">#003366</color>
+</resources>

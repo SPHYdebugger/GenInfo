@@ -18,21 +18,21 @@
             android:id="@+id/txtReferencia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Referencia"
+            android:text="@string/reference"
             android:textColor="@color/design_default_color_background" />
 
         <TextView
             android:id="@+id/txtTipo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tipo"
+            android:text="@string/type"
             android:textColor="@color/design_default_color_background" />
 
         <TextView
             android:id="@+id/txtFecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fecha"
+            android:text="@string/date"
             android:textColor="@color/design_default_color_background" />
     </LinearLayout>
 
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Eliminar informe"
+        android:contentDescription="@string/delete_report"
         android:src="@android:drawable/ic_menu_delete" />
 </LinearLayout>
 

@@ -1,4 +1,182 @@
-
 <resources>
     <string name="app_name">GenINFOR</string>
+    <string name="splash_version">GenInfor v3.0</string>
+
+    <string name="generate_report">GENERAR INFORME</string>
+    <string name="view_reports">VER INFORMES</string>
+    <string name="back_to_menu">VOLVER AL MENÚ</string>
+    <string name="privacy_link">Política de privacidad</string>
+    <string name="contact_link">Datos de contacto</string>
+    <string name="modify_report">MODIFICAR INFORME</string>
+    <string name="open">ABRIR</string>
+    <string name="edit">EDITAR</string>
+    <string name="preview_title">Previsualización</string>
+
+    <string name="field_reference_intervention">REFERENCIA DE INTERVENCIÓN</string>
+    <string name="field_incident">SINIESTRO</string>
+    <string name="field_requester">REQUIRENTE</string>
+    <string name="field_place">LUGAR</string>
+    <string name="field_people_present">PERSONAS PRESENTES</string>
+    <string name="field_boat_name">NOMBRE BARCO</string>
+    <string name="field_registration">MATRÍCULA</string>
+    <string name="field_damage">DAÑOS</string>
+    <string name="field_causes">CAUSAS</string>
+    <string name="field_reserve">RESERVA</string>
+    <string name="field_observations">OBSERVACIONES</string>
+    <string name="field_pending_docs">DOCUMENTACIÓN PENDIENTE</string>
+    <string name="attached_images">Imágenes adjuntadas:</string>
+    <string name="attach_photos">ADJUNTAR FOTOS</string>
+    <string name="send_pdf_auto_email">Enviar PDF por correo automáticamente</string>
+
+    <string name="required_fields_intro">Debes completar los siguientes campos:\n</string>
+    <string name="required_reference">- REFERENCIA\n</string>
+    <string name="required_incident">- SINIESTRO\n</string>
+    <string name="required_place">- LUGAR\n</string>
+    <string name="required_fields_title">Campos obligatorios</string>
+    <string name="close">Cerrar</string>
+    <string name="confirm_create_report_title">Confirmar creación de informe</string>
+    <string name="confirm_create_report">¿Estás seguro de crear el informe %1$s?</string>
+    <string name="confirm_modify_report_title">Confirmar modificación</string>
+    <string name="confirm_modify_report">¿Estás seguro de modificar el informe %1$s?</string>
+    <string name="with_attached_photos">Con %1$d foto(s) adjunta(s).</string>
+    <string name="without_photos">Sin fotos adjuntas.</string>
+    <string name="create">CREAR</string>
+    <string name="continue_upper">CONTINUAR</string>
+    <string name="cancel_upper">CANCELAR</string>
+    <string name="yes_upper">SI</string>
+    <string name="no_upper">NO</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+
+    <string name="generating_pdf">Generando PDF...</string>
+    <string name="error_saving_report">Error al guardar informe</string>
+    <string name="error_generating_pdf">Error al generar PDF</string>
+    <string name="report_added_to_list">Informe añadido a la lista</string>
+    <string name="pdf_sent_email">PDF enviado por email</string>
+    <string name="error_sending_pdf">Error al enviar PDF</string>
+    <string name="email_subject_report">AUTOInforme de intervención: %1$s</string>
+    <string name="email_body_report">Se adjunta el informe generado con GenInfor v1.0.</string>
+
+    <string name="optimize_photos_title">Optimizar fotos</string>
+    <string name="optimize_photos_message">¿Quieres optimizar las fotos para que el PDF generado pese lo mínimo posible?\nSi eliges \"SI\", se mantendrá el tamaño de las fotos pero se comprimirá su peso.</string>
+    <string name="report_page_prefix">Página</string>
+    <string name="report_date_long_pattern">dd \'de\' MMMM \'de\' yyyy</string>
+    <string name="report_date_time_pattern">dd/MM/yyyy HH:mm</string>
+    <string name="report_title">INFORME PRELIMINAR EERR</string>
+    <string name="report_vertical_revision">Rev.: %1$s - Este documento es propiedad de COMISMAR, S.A. y de uso estrictamente confidencial, no podrá ser utilizado ni distribuido sin autorización expresa de la dirección de la empresa.</string>
+    <string name="report_section_1">1. DATOS INTERVENCIÓN</string>
+    <string name="report_section_2">2. INSPECCIÓN</string>
+    <string name="report_section_3">3. EMBARCACIÓN</string>
+    <string name="report_section_4">4. DAÑOS</string>
+    <string name="report_section_5">5. CAUSAS</string>
+    <string name="report_section_6">6. RESERVA</string>
+    <string name="report_section_7">7. OBSERVACIONES</string>
+    <string name="report_section_pending_docs">DOCUMENTACIÓN PENDIENTE</string>
+    <string name="report_label_reference">Referencia</string>
+    <string name="report_label_incident">Siniestro</string>
+    <string name="report_label_requester">Requirente</string>
+    <string name="report_label_date">Fecha</string>
+    <string name="report_label_place">Lugar</string>
+    <string name="report_label_technician">Técnico Intervención</string>
+    <string name="report_default_technician">Álvaro Pousada López     COMISMAR S.A.</string>
+    <string name="report_label_other_people">Otras personas</string>
+    <string name="report_label_boat_name">Nombre barco</string>
+    <string name="report_label_registration">Matrícula</string>
+    <string name="report_attached_images">IMÁGENES ADJUNTAS</string>
+    <string name="report_no_attached_photos">No se han adjuntado fotos</string>
+    <string name="report_legal_text">Este informe, por su carácter exclusivamente técnico, se emite sin prejuzgar cuestiones de derecho y/o responsabilidad de cualquiera de las partes interesadas en el mismo, y a reserva de las condiciones establecidas en la Póliza de Seguros.\n\nAdemás, y a los efectos del Artículo 335 de la Ley de Enjuiciamiento Civil 1/2000, el abajo firmante D. Álvaro Pousada López en su calidad de PERITO, manifiesta bajo juramento o promesa de decir verdad, que ha actuado y, en su caso, actuará con la mayor objetividad posible, tomando en consideración tanto lo que pueda favorecer como lo que sea susceptible de causar perjuicio a cualquiera de las partes, y que conoce las sanciones penales en las que podría incurrir si incumpliere su deber como perito.\n\nDe conformidad con lo dispuesto en la normativa de protección de datos, comunicamos que para los posibles datos personales incluidos en este informe pueden ejercitarse los derechos de acceso, rectificación, oposición y cancelación ante COMISMAR, S.A., sito en la calle Pintor Juan Gris, nº 4 - 28020 – Madrid.</string>
+    <string name="report_location_date">En %1$s, %2$s</string>
+    <string name="report_signature_block">COMISARIADO ESPAÑOL MARÍTIMO\nFdo. Álvaro Pousada López\nCOMISARIO DE AVERÍAS\nAPCAS Nº 9367\n</string>
+    <string name="overwrite_or_copy_message">¿Quieres sobrescribir el informe original o crear una copia?</string>
+    <string name="save_changes_title">Guardar cambios</string>
+    <string name="overwrite">SOBRESCRIBIR</string>
+    <string name="copy">COPIA</string>
+    <string name="report_modified">Informe modificado</string>
+    <string name="copy_created">Copia creada</string>
+
+    <string name="photo_taken">Foto tomada</string>
+    <string name="photo_selected">Foto seleccionada</string>
+    <string name="photos_selected_count">%1$d foto(s) seleccionada(s)</string>
+    <string name="max_4_images">Solo puedes adjuntar un máximo de 4 imágenes</string>
+    <string name="take_photo">Tomar Foto</string>
+    <string name="choose_from_gallery">Elegir de Galería</string>
+    <string name="attach_photo_title">Adjuntar Foto</string>
+    <string name="camera_permission_denied">Permiso de cámara denegado</string>
+    <string name="select_images">Seleccionar imágenes</string>
+    <string name="photo_access_lost">No se pudo acceder a una foto. Vuelve a seleccionarla.</string>
+    <string name="image_label">Imagen</string>
+
+    <string name="pdf_not_found">No se encontró el archivo PDF</string>
+    <string name="report_not_found">No se encontró el informe</string>
+    <string name="error_open_pdf">Error al abrir el PDF</string>
+    <string name="no_pdf_viewer">No hay visor de PDF disponible</string>
+
+    <string name="reference">Referencia</string>
+    <string name="type">Tipo</string>
+    <string name="date">Fecha</string>
+    <string name="reference_colon">Referencia: %1$s</string>
+    <string name="type_colon">Tipo: %1$s</string>
+    <string name="date_colon">Fecha: %1$s</string>
+    <string name="delete_report">Eliminar informe</string>
+    <string name="delete_report_confirm">¿Estás seguro de que quieres eliminar este informe?</string>
+    <string name="report_deleted">Informe eliminado</string>
+    <string name="reports_found_count">Informes encontrados: %1$d</string>
+    <string name="error_loading_reports">Error al cargar informes</string>
+    <string name="no_reports_generated">No hay informes generados</string>
+
+    <string name="app_logs_title">LOGS APP</string>
+    <string name="clear_logs">LIMPIAR LOGS</string>
+    <string name="logs_cleared">Logs eliminados</string>
+    <string name="no_logs">Sin logs.</string>
+    <string name="error_reading_logs">Error leyendo logs: %1$s</string>
+
+    <string name="settings_title">SETTINGS</string>
+    <string name="settings_adjust_email">AJUSTAR CUENTA DE CORREO</string>
+    <string name="settings_view_logs">VER LOGS</string>
+    <string name="settings_privacy_policy">POLITICA PRIVACIDAD</string>
+    <string name="settings_contact_data">DATOS DE CONTACTO</string>
+    <string name="settings_change_language">CAMBIAR IDIOMA (ES/EN)</string>
+    <string name="settings_delete_all_data">BORRAR TODOS LOS DATOS</string>
+    <string name="common_back">VOLVER</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+
+    <string name="current_email">Correo actual: %1$s</string>
+    <string name="recipient_account_title">Cuenta destinataria</string>
+    <string name="recipient_account_message">Introduce el nuevo correo destinatario:</string>
+    <string name="invalid_email">Correo no válido</string>
+    <string name="email_updated">Correo actualizado</string>
+
+    <string name="delete_data_warning">Se eliminarán todos los datos de la app</string>
+    <string name="delete_data_title">Borrar todos los datos</string>
+    <string name="delete_data_message">Esta acción eliminará informes, PDFs, fotos y logs. ¿Continuar?</string>
+    <string name="delete_action">BORRAR</string>
+    <string name="data_deleted">Datos eliminados</string>
+    <string name="delete_error">Error al borrar datos</string>
+
+    <string name="language_changed_es">Idioma cambiado a castellano</string>
+    <string name="language_changed_en">Language changed to English</string>
+
+    <string name="contact_title">Datos de Contacto</string>
+    <string name="privacy_title">Politica de Privacidad</string>
+    <string name="document_separator">\n\n--------------------------------\n\n</string>
+
+    <string name="contact_body">Desarrollador: Santiago Perez Hernandez\nEmail: infogenpdf@gmail.com\n\nSobre la app\nGenInfor permite generar informes PDF con fotos, almacenarlos localmente y enviarlos por correo.\n\nQue datos recoge la app\nNo se recopilan datos personales para analitica o publicidad.\n\nAlmacenamiento de datos\nLos datos e informes se guardan localmente en el dispositivo.\n\nComparticion con terceros\nNo se comparte informacion con terceros con fines comerciales.\n\nContacto\nPara cualquier consulta, escribe a infogenpdf@gmail.com.\n\nEliminacion de datos\nPuedes borrar datos desde Ajustes de la app o desinstalando la aplicacion.</string>
+
+    <string name="privacy_body">InfoGen Informes\n\nUltima actualizacion: 13 de febrero de 2026\n\n1. Responsable del tratamiento\nNombre: Santiago Perez Hernandez\nCorreo de contacto: infogenpdf@gmail.com\n\n2. Datos personales tratados\nLa aplicacion no requiere registro ni recopila identificadores para fines comerciales.\nLos datos que introduces en los informes se almacenan localmente en tu dispositivo.\n\n3. Finalidad\nGeneracion de informes PDF de intervenciones con fotos adjuntas.\n\n4. Base legal\nUso voluntario de la aplicacion por parte del usuario.\n\n5. Almacenamiento\nLos datos se guardan de forma local en el dispositivo.\n\n6. Cesion a terceros\nNo se ceden datos con fines publicitarios ni de analitica.\n\n7. Permisos\nLa app puede usar camara/galeria para adjuntar fotos y acceso a internet para envio de correo cuando se solicita.\n\n8. Derechos y eliminacion\nPuedes eliminar los datos desde ajustes del sistema, desde el menu de Settings de la app o desinstalando la aplicacion.\n\n9. Cambios en esta politica\nEsta politica puede actualizarse para reflejar cambios legales o funcionales.</string>
+    <string name="login_button">LOG IN</string>
+    <string name="remember_credentials">Recordar credenciales</string>
+    <string name="close_app">CERRAR APP</string>
+    <string name="login_user">Usuario</string>
+    <string name="login_password">Contraseña</string>
+    <string name="enter">ENTRAR</string>
+    <string name="login_invalid_credentials">Usuario o contraseña incorrectos</string>
+    <string name="login_close_confirm">Pulsa CERRAR APP otra vez para salir</string>
+    <string name="logout">LOGOUT</string>
+    <string name="logout_confirm_message">¿Está seguro de cerrar sesión autorizada? La próxima vez necesitará sus credenciales para acceder.</string>
+    <string name="accept_upper">ACEPTAR</string>
 </resources>
+
+
+
+
