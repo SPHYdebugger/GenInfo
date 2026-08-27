@@ -55,7 +55,7 @@
     <string name="pdf_sent_email">PDF sent by email</string>
     <string name="error_sending_pdf">Error sending PDF</string>
     <string name="email_subject_report">AUTOIntervention report: %1$s</string>
-    <string name="email_body_report">Attached is the report generated with GenInfor v1.0.</string>
+    <string name="email_body_report">Attached is the report generated with GenInfor v3.0.</string>
 
     <string name="optimize_photos_title">Optimize photos</string>
     <string name="optimize_photos_message">Do you want to optimize photos so the generated PDF is as small as possible?\nIf you choose \"YES\", photo dimensions are kept but weight is compressed.</string>

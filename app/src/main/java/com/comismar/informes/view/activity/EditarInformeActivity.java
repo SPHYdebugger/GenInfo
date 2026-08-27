@@ -179,6 +179,7 @@ public class EditarInformeActivity extends Activity {
     private void procesarModificacion(boolean optimizarFotos, boolean sobrescribir) {
         setOverlayVisible(true);
         Toast.makeText(this, R.string.generating_pdf, Toast.LENGTH_SHORT).show();
+        AppLogger.logInfo(this, "EditarInformeActivity", "Iniciando edición de informe: " + inputReferencia.getText().toString() + " (sobrescribir=" + sobrescribir + ")");
 
         String siniestro = ((EditText) findViewById(R.id.inputSiniestro)).getText().toString();
         String requirente = ((EditText) findViewById(R.id.inputRequirente)).getText().toString();
@@ -218,6 +219,7 @@ public class EditarInformeActivity extends Activity {
             setOverlayVisible(false);
             return;
         }
+        AppLogger.logSuccess(this, "EditarInformeActivity", "PDF generado con éxito: " + pdfGenerado.getName());
 
         String mensajeResultado;
         String sufijoReferencia = sobrescribir ? " MOD" : " COP";
@@ -260,6 +262,7 @@ public class EditarInformeActivity extends Activity {
 
             try {
                 AppDatabase.getInstance(getApplicationContext()).informeDao().actualizar(informeOriginal);
+                AppLogger.logSuccess(this, "EditarInformeActivity", "Informe actualizado en la base de datos: " + informeOriginal.referencia);
             } catch (Exception e) {
                 AppLogger.logError(this, "EditarInformeActivity", "No se pudo guardar un informe (update DB)", e);
                 Toast.makeText(this, R.string.error_saving_report, Toast.LENGTH_SHORT).show();
@@ -290,6 +293,7 @@ public class EditarInformeActivity extends Activity {
 
             try {
                 AppDatabase.getInstance(getApplicationContext()).informeDao().insertar(nuevoInforme);
+                AppLogger.logSuccess(this, "EditarInformeActivity", "Copia de informe insertada en la base de datos: " + nuevoInforme.referencia);
             } catch (Exception e) {
                 AppLogger.logError(this, "EditarInformeActivity", "No se pudo guardar un informe (insert DB copia)", e);
                 Toast.makeText(this, R.string.error_saving_report, Toast.LENGTH_SHORT).show();
@@ -302,12 +306,22 @@ public class EditarInformeActivity extends Activity {
         final File pdfAdjunto = pdfGenerado;
         if (enviarPorCorreo) {
             final String destinatario = AppSettings.getRecipientEmail(this);
+            AppLogger.logInfo(this, "EditarInformeActivity", "Preparando envío de correo a: " + destinatario);
             new Thread(() -> {
                 try {
                     MailSender sender = new MailSender("infogenpdf@gmail.com", "lwoi wagz zywo udae");
+                    String cuerpoHtml = construirCuerpoHtml(
+                            referencia,
+                            siniestro,
+                            requirente,
+                            lugar,
+                            nombreBarco,
+                            matricula
+                    );
                     sender.enviarCorreo(
+                            getApplicationContext(),
                             getString(R.string.email_subject_report, referencia),
-                            getString(R.string.email_body_report),
+                            cuerpoHtml,
                             "infogenpdf@gmail.com",
                             destinatario,
                             pdfAdjunto);
@@ -335,6 +349,39 @@ public class EditarInformeActivity extends Activity {
                         volverAListado();
                     });
         }
+    }
+
+    private String construirCuerpoHtml(String ref, String sin, String req, String lug, String barco, String mat) {
+        String base64Logo = MailSender.getResourceToBase64(this, R.drawable.horizontal);
+        StringBuilder html = new StringBuilder();
+        html.append("<html><body style=\"font-family: Arial, sans-serif; color: #333;\">");
+        html.append("<div style=\"text-align: center; margin-bottom: 20px;\">");
+        html.append("<img src=\"data:image/jpeg;base64,").append(base64Logo).append("\" style=\"max-width: 100%; height: auto;\">");
+        html.append("</div>");
+        html.append("<h2 style=\"color: #004a99; border-bottom: 2px solid #004a99; padding-bottom: 10px;\">Detalles del Informe</h2>");
+        html.append("<table style=\"width: 100%; border-collapse: collapse;\">");
+        
+        appendRow(html, "Referencia de intervención", ref);
+        appendRow(html, "Siniestro", sin);
+        appendRow(html, "Requirente", req);
+        appendRow(html, "Lugar", lug);
+        appendRow(html, "Nombre del barco", barco);
+        appendRow(html, "Matrícula", mat);
+        
+        html.append("</table>");
+        html.append("<div style=\"margin-top: 30px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #777;\">");
+        html.append("<p>Informe creado automáticamente por la app <strong>GenInfor V 3.0</strong></p>");
+        html.append("<p>Desarrollada por <strong>Santiago Pérez</strong></p>");
+        html.append("</div></body></html>");
+        
+        return html.toString();
+    }
+
+    private void appendRow(StringBuilder html, String label, String value) {
+        html.append("<tr>");
+        html.append("<td style=\"padding: 8px; font-weight: bold; width: 40%; border-bottom: 1px solid #eee;\">").append(label).append(":</td>");
+        html.append("<td style=\"padding: 8px; border-bottom: 1px solid #eee;\">").append(value != null ? value : "").append("</td>");
+        html.append("</tr>");
     }
 
     private String aplicarSufijoCorto(String referencia, String sufijo) {

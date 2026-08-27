@@ -11,9 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.comismar.informes.R;
 import com.comismar.informes.view.utils.AppSettings;
+import com.comismar.informes.view.utils.KeepAliveWorker;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, DatosContactoActivity.class);
             startActivity(intent);
         });
+
+        programarMantenerClaveViva();
 
         headerImage.setOnTouchListener((v, event) -> {
             switch (event.getActionMasked()) {
@@ -106,5 +114,17 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void programarMantenerClaveViva() {
+        PeriodicWorkRequest keepAliveRequest =
+                new PeriodicWorkRequest.Builder(KeepAliveWorker.class, 60, TimeUnit.DAYS)
+                        .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "BrevoApiKeyKeepAlive",
+                ExistingPeriodicWorkPolicy.KEEP,
+                keepAliveRequest
+        );
     }
 }

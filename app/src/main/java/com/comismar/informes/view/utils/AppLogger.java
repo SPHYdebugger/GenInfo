@@ -14,12 +14,24 @@ public class AppLogger {
 
     private static final String LOG_FILE_NAME = "app_logs.txt";
 
-    public static synchronized void logError(Context context, String source, String message, Throwable throwable) {
+    public static void logError(Context context, String source, String message, Throwable throwable) {
+        log(context, "ERROR", source, message, throwable);
+    }
+
+    public static void logInfo(Context context, String source, String message) {
+        log(context, "INFO ", source, message, null);
+    }
+
+    public static void logSuccess(Context context, String source, String message) {
+        log(context, "SUCCESS", source, message, null);
+    }
+
+    private static synchronized void log(Context context, String level, String source, String message, Throwable throwable) {
         if (context == null) return;
         File file = new File(context.getFilesDir(), LOG_FILE_NAME);
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
         StringBuilder line = new StringBuilder();
-        line.append(timestamp).append(" | ").append(source).append(" | ").append(message);
+        line.append(timestamp).append(" | ").append(level).append(" | ").append(source).append(" | ").append(message);
         if (throwable != null && throwable.getMessage() != null) {
             line.append(" | ex=").append(throwable.getMessage());
         }

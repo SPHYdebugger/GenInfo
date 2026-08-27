@@ -100,6 +100,7 @@ public class ListaInformesActivity extends AppCompatActivity implements OnInform
 
         // Eliminar de la base de datos y lista
         AppDatabase.getInstance(getApplicationContext()).informeDao().eliminar(informe);
+        AppLogger.logSuccess(this, "ListaInformesActivity", "Informe eliminado: " + informe.referencia);
         listaInformes.remove(position);
 
         // Notificar eliminación con animación

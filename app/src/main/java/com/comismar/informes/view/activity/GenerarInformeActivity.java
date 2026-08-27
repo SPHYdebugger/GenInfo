@@ -179,6 +179,7 @@ public class GenerarInformeActivity extends Activity {
     private void generarInforme(boolean optimizarFotos) {
         setOverlayVisible(true);
         Toast.makeText(this, R.string.generating_pdf, Toast.LENGTH_SHORT).show();
+        AppLogger.logInfo(this, "GenerarInformeActivity", "Iniciando generación de informe: " + inputReferencia.getText().toString());
 
         String siniestro = ((EditText) findViewById(R.id.inputSiniestro)).getText().toString();
         String requirente = ((EditText) findViewById(R.id.inputRequirente)).getText().toString();
@@ -217,6 +218,7 @@ public class GenerarInformeActivity extends Activity {
             setOverlayVisible(false);
             return;
         }
+        AppLogger.logSuccess(this, "GenerarInformeActivity", "PDF generado con éxito: " + pdfGenerado.getName());
 
         // Guardar en la base de datos
         Informe nuevoInforme = new Informe();
@@ -242,6 +244,7 @@ public class GenerarInformeActivity extends Activity {
         try {
             AppDatabase db = AppDatabase.getInstance(getApplicationContext());
             db.informeDao().insertar(nuevoInforme);
+            AppLogger.logSuccess(this, "GenerarInformeActivity", "Informe insertado en la base de datos: " + referencia);
         } catch (Exception e) {
             AppLogger.logError(this, "GenerarInformeActivity", "No se pudo guardar un informe (insert DB)", e);
             Toast.makeText(this, R.string.error_saving_report, Toast.LENGTH_SHORT).show();
@@ -251,12 +254,22 @@ public class GenerarInformeActivity extends Activity {
 
         if (enviarPorCorreo) {
             final String destinatario = AppSettings.getRecipientEmail(this);
+            AppLogger.logInfo(this, "GenerarInformeActivity", "Preparando envío de correo a: " + destinatario);
             new Thread(() -> {
                 try {
                     MailSender sender = new MailSender("infogenpdf@gmail.com", "lwoi wagz zywo udae");
+                    String cuerpoHtml = construirCuerpoHtml(
+                            referencia,
+                            siniestro,
+                            requirente,
+                            lugar,
+                            nombreBarco,
+                            matricula
+                    );
                     sender.enviarCorreo(
+                            getApplicationContext(),
                             getString(R.string.email_subject_report, referencia),
-                            getString(R.string.email_body_report),
+                            cuerpoHtml,
                             "infogenpdf@gmail.com",
                             destinatario,
                             pdfGenerado);
@@ -563,6 +576,39 @@ public class GenerarInformeActivity extends Activity {
             }
         }
         return array.toString();
+    }
+
+    private String construirCuerpoHtml(String ref, String sin, String req, String lug, String barco, String mat) {
+        String base64Logo = MailSender.getResourceToBase64(this, R.drawable.horizontal);
+        StringBuilder html = new StringBuilder();
+        html.append("<html><body style=\"font-family: Arial, sans-serif; color: #333;\">");
+        html.append("<div style=\"text-align: center; margin-bottom: 20px;\">");
+        html.append("<img src=\"data:image/jpeg;base64,").append(base64Logo).append("\" style=\"max-width: 100%; height: auto;\">");
+        html.append("</div>");
+        html.append("<h2 style=\"color: #004a99; border-bottom: 2px solid #004a99; padding-bottom: 10px;\">Detalles del Informe</h2>");
+        html.append("<table style=\"width: 100%; border-collapse: collapse;\">");
+        
+        appendRow(html, "Referencia de intervención", ref);
+        appendRow(html, "Siniestro", sin);
+        appendRow(html, "Requirente", req);
+        appendRow(html, "Lugar", lug);
+        appendRow(html, "Nombre del barco", barco);
+        appendRow(html, "Matrícula", mat);
+        
+        html.append("</table>");
+        html.append("<div style=\"margin-top: 30px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #777;\">");
+        html.append("<p>Informe creado automáticamente por la app <strong>GenInfor V 3.0</strong></p>");
+        html.append("<p>Desarrollada por <strong>Santiago Pérez</strong></p>");
+        html.append("</div></body></html>");
+        
+        return html.toString();
+    }
+
+    private void appendRow(StringBuilder html, String label, String value) {
+        html.append("<tr>");
+        html.append("<td style=\"padding: 8px; font-weight: bold; width: 40%; border-bottom: 1px solid #eee;\">").append(label).append(":</td>");
+        html.append("<td style=\"padding: 8px; border-bottom: 1px solid #eee;\">").append(value != null ? value : "").append("</td>");
+        html.append("</tr>");
     }
 
     private void mostrarToastsEnCadena(String[] mensajes, Runnable onFinish) {
