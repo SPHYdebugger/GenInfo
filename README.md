@@ -1,10 +1,10 @@
-# ComismarApp - Sistema de Gestión de Informes Periciales Navales
+# GenINFOR App - Sistema de Gestión de Informes Periciales Navales
 
 ![Android](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android)
 ![Java](https://img.shields.io/badge/Language-Java-ED8B00?logo=java)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-**ComismarApp** es una solución móvil profesional diseñada específicamente para peritos e inspectores marítimos. La aplicación permite la digitalización completa del proceso de inspección, desde la captura de datos y fotografías en el lugar del siniestro hasta la generación y envío automático de informes técnicos en formato PDF.
+**GenINFOR App** es una solución móvil profesional diseñada específicamente para peritos e inspectores marítimos. La aplicación permite la digitalización completa del proceso de inspección, desde la captura de datos y fotografías en el lugar del siniestro hasta la generación y envío automático de informes técnicos en formato PDF.
 
 ## 🚀 Funcionalidades Clave
 
