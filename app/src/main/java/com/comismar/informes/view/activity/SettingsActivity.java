@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Patterns;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,16 +48,27 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void abrirDialogoCorreo() {
         String correoActual = AppSettings.getRecipientEmail(this);
-        Toast.makeText(this, getString(R.string.current_email, correoActual), Toast.LENGTH_LONG).show();
+        boolean autoEnvioActual = AppSettings.isAutoSendEmailEnabled(this);
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10);
 
         EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         input.setText(correoActual);
+        input.setHint(R.string.recipient_account_message);
+        layout.addView(input);
+
+        CheckBox cbAutoSend = new CheckBox(this);
+        cbAutoSend.setText(R.string.send_pdf_auto_email);
+        cbAutoSend.setChecked(autoEnvioActual);
+        cbAutoSend.setPadding(0, 20, 0, 0);
+        layout.addView(cbAutoSend);
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.recipient_account_title)
-                .setMessage(R.string.recipient_account_message)
-                .setView(input)
+                .setView(layout)
                 .setPositiveButton(R.string.save, (dialog, which) -> {
                     String nuevoCorreo = input.getText().toString().trim();
                     if (nuevoCorreo.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(nuevoCorreo).matches()) {
@@ -63,6 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
                         return;
                     }
                     AppSettings.setRecipientEmail(this, nuevoCorreo);
+                    AppSettings.setAutoSendEmailEnabled(this, cbAutoSend.isChecked());
                     Toast.makeText(this, R.string.email_updated, Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton(R.string.cancel, null)

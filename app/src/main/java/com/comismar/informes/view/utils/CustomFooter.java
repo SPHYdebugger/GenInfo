@@ -67,10 +67,10 @@ public class CustomFooter extends PdfPageEventHelper {
 
             ColumnText.showTextAligned(
                     canvas,
-                    Element.ALIGN_RIGHT,
+                    Element.ALIGN_CENTER,
                     pageNumber,
-                    document.right() - 5,
-                    y + 5, // un poco por encima del borde inferior
+                    (document.left() + document.right()) / 2,
+                    y + 5, // Subido 5 píxeles desde el borde inferior
                     0
             );
 

@@ -1,35 +1,40 @@
-# Gradle
+# Android Studio / IntelliJ
 .gradle/
-build/
-**/build/
-**/out/
-
-# Android
-*.apk
-*.aab
-*.ap_
-*.dex
-*.class
+/local.properties
+/.idea/
 *.iml
-local.properties
-keystore.properties
-*.jks
-*.keystore
+*.iws
+/out/
+
+# Compilación y Artefactos
+build/
+app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.apks
+*.aab
 **/release/
 **/debug/
 
-# IDEs
-.idea/
-*.iml
-*.ipr
-*.iws
-*.swp
-.vscode/
-
-# OS
+# Archivos de sistema
 .DS_Store
 Thumbs.db
 desktop.ini
 
 # Logs
 *.log
+
+# Seguridad y Firmas
+*.jks
+*.keystore
+google-services.json
+
+# Proguard / R8 mapping files
+/app/build/outputs/mapping/
+
+# [INSTRUCCIÓN ESPECÍFICA] Privacidad de activos visuales
+# Se excluyen todos los recursos drawable (incluyendo variantes de densidad)
+# para proteger la propiedad intelectual de los activos visuales.
+/app/src/main/res/drawable*/

@@ -54,7 +54,7 @@ public class InformePdfGenerator {
             file = new File(outputDir, nombreArchivo);
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
 
-            Bitmap footerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.footer);
+            Bitmap footerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pienuevo);
             byte[] footerBytes = comprimirImagenDecorativa(footerBitmap, optimizarFotos);
             writer.setPageEvent(new CustomFooter(footerBytes, context.getString(R.string.report_page_prefix)));
 
@@ -78,28 +78,17 @@ public class InformePdfGenerator {
             document.add(titulo);
 
 
-            // Añadir columna de 1 celda vertical con texto legal
-            PdfPTable tablaConTextoVertical = new PdfPTable(new float[]{1f, 9f}); // 10% para texto, 90% para tabla
-            tablaConTextoVertical.setWidthPercentage(100);
-            tablaConTextoVertical.setSpacingBefore(10f);
-
-            // Texto vertical
+            // Texto vertical de revisión (ahora ocupa toda la altura de la página de forma absoluta)
+            PdfContentByte cb = writer.getDirectContent();
             Font fontVertical = new Font(Font.FontFamily.HELVETICA, 6, Font.NORMAL, BaseColor.GRAY);
-            PdfPCell celdaVertical = new PdfPCell(new Phrase(context.getString(R.string.report_vertical_revision, fechaHoy), fontVertical));
-            celdaVertical.setRotation(90); // gira el texto
-            celdaVertical.setBorder(PdfPCell.NO_BORDER);
-            celdaVertical.setHorizontalAlignment(Element.ALIGN_LEFT);
-            celdaVertical.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-            // Añadir la celda vertical
-            tablaConTextoVertical.addCell(celdaVertical);
-
+            Phrase phraseVertical = new Phrase(context.getString(R.string.report_vertical_revision, fechaHoy), fontVertical);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, phraseVertical, 20, PageSize.A4.getHeight() / 2, 90);
 
             PdfPTable tabla = new PdfPTable(new float[]{1f, 3f});
             tabla.setWidthPercentage(90);
             tabla.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            tabla.setSpacingBefore(10f);  // menos espacio
-            tabla.setSpacingAfter(10f);
+            tabla.setSpacingBefore(10f);
+            tabla.setSpacingAfter(50f); // Aumentado para dejar separación con el pie de página
 
 
 
@@ -147,20 +136,15 @@ public class InformePdfGenerator {
             tabla.addCell(getSeccion(context.getString(R.string.report_section_7), fontSection));
             tabla.addCell(getTextoLargo(observaciones, fontValue));
             tabla.addCell(getSeccion(context.getString(R.string.report_section_pending_docs), fontSection));
-            tabla.addCell(getTextoLargo(docP, fontValue));
+            tabla.addCell(getTextoLargoEstrecho(docP, fontValue));
 
 
-            PdfPCell celdaTablaPrincipal = new PdfPCell(tabla);
-            celdaTablaPrincipal.setBorder(PdfPCell.NO_BORDER);
-            tablaConTextoVertical.addCell(celdaTablaPrincipal);
-            document.add(tablaConTextoVertical);
+            document.add(tabla);
 
 
             document.newPage();
 
-            document.add(new Paragraph(" ")); // espacio
-            document.add(new Paragraph(context.getString(R.string.report_attached_images), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
-            document.add(new Paragraph(" ")); // espacio
+            document.add(new Paragraph(context.getString(R.string.report_attached_images), new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD)));
 
             PdfPTable tablaFotos = new PdfPTable(2);
             tablaFotos.setWidthPercentage(100);
@@ -329,22 +313,30 @@ public class InformePdfGenerator {
         Font fontBold = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
         PdfPCell celda = new PdfPCell(new Phrase(texto, fontBold));
         celda.setBackgroundColor(new BaseColor(230, 230, 250));
-        celda.setPadding(4);  // menos padding
+        celda.setPadding(3);  // Reducido de 4 a 3
         return celda;
     }
 
     private static PdfPCell getCeldaDato(String texto) {
         Font fontNormal = new Font(Font.FontFamily.HELVETICA, 9);
         PdfPCell celda = new PdfPCell(new Phrase(texto, fontNormal));
-        celda.setPadding(4);
+        celda.setPadding(3); // Reducido de 4 a 3
         return celda;
     }
 
     private static PdfPCell getTextoLargo(String texto, Font font) {
         PdfPCell celda = new PdfPCell(new Phrase(texto, font));
         celda.setColspan(2);
-        celda.setMinimumHeight(40);  // menos altura
-        celda.setPadding(4);
+        celda.setMinimumHeight(35);  // Reducido de 40 a 35
+        celda.setPadding(3); // Reducido de 4 a 3
+        return celda;
+    }
+
+    private static PdfPCell getTextoLargoEstrecho(String texto, Font font) {
+        PdfPCell celda = new PdfPCell(new Phrase(texto, font));
+        celda.setColspan(2);
+        celda.setMinimumHeight(40);  // Restaurado a 40 para que no sea tan pequeño
+        celda.setPadding(3);
         return celda;
     }
 
@@ -352,8 +344,8 @@ public class InformePdfGenerator {
         PdfPCell celda = new PdfPCell(new Phrase(texto, font));
         celda.setColspan(2);
         celda.setBackgroundColor(new BaseColor(0, 51, 102));
-        celda.setPadding(3);
-        celda.setMinimumHeight(25); // menos altura para la sección
+        celda.setPadding(2); // Reducido de 3 a 2
+        celda.setMinimumHeight(20); // Reducido de 25 a 20
         return celda;
     }
 

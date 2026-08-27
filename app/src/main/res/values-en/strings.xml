@@ -63,7 +63,7 @@
     <string name="report_date_long_pattern">MMMM d, yyyy</string>
     <string name="report_date_time_pattern">MM/dd/yyyy HH:mm</string>
     <string name="report_title">PRELIMINARY EERR REPORT</string>
-    <string name="report_vertical_revision">Rev.: %1$s - This document is the property of COMISMAR, S.A. and is strictly confidential. It may not be used or distributed without express authorization from company management.</string>
+    <string name="report_vertical_revision">Rev.: %1$s - Document property of COMISARIADO ESPAÑOL MARÍTIMO SERVICIOS DE PERITAJES, S.L. and strictly confidential. It may not be used or distributed without express authorization from the company.</string>
     <string name="report_section_1">1. INTERVENTION DATA</string>
     <string name="report_section_2">2. INSPECTION</string>
     <string name="report_section_3">3. VESSEL</string>
@@ -78,15 +78,15 @@
     <string name="report_label_date">Date</string>
     <string name="report_label_place">Place</string>
     <string name="report_label_technician">Intervention Technician</string>
-    <string name="report_default_technician">Álvaro Pousada López     COMISMAR S.A.</string>
+    <string name="report_default_technician">Álvaro Pousada López\nCOMISARIADO ESPAÑOL MARÍTIMO SERVICIOS DE PERITAJES, S.L.</string>
     <string name="report_label_other_people">Other people</string>
     <string name="report_label_boat_name">Vessel name</string>
     <string name="report_label_registration">Registration</string>
     <string name="report_attached_images">ATTACHED IMAGES</string>
     <string name="report_no_attached_photos">No photos have been attached</string>
-    <string name="report_legal_text">This report, due to its exclusively technical nature, is issued without prejudging questions of law and/or liability of any interested parties, and subject to the conditions established in the Insurance Policy.\n\nFurthermore, for the purposes of Article 335 of the Spanish Civil Procedure Act 1/2000, the undersigned Mr. Álvaro Pousada López, in his capacity as EXPERT, declares under oath or promise to tell the truth that he has acted and, where applicable, will act with the greatest possible objectivity, taking into consideration both what may favor and what may be liable to cause harm to any of the parties, and that he is aware of the criminal penalties he may incur if he fails to fulfill his duty as an expert.\n\nIn accordance with data protection regulations, we inform you that for any personal data included in this report, rights of access, rectification, objection, and cancellation may be exercised before COMISMAR, S.A., located at Pintor Juan Gris Street, no. 4 - 28020 - Madrid.</string>
+    <string name="report_legal_text">This report, due to its exclusively technical nature, is issued without prejudging questions of law and/or liability of any interested parties, and subject to the conditions established in the Insurance Policy.\n\nFurthermore, for the purposes of Article 335 of the Spanish Civil Procedure Act 1/2000, the undersigned Mr. Álvaro Pousada López, in his capacity as EXPERT, declares under oath or promise to tell the truth that he has acted and, where applicable, will act with the greatest possible objectivity, taking into consideration both what may favor and what may be liable to cause harm to any of the parties, and that he is aware of the criminal penalties he may incur if he fails to fulfill his duty as an expert.\n\nIn accordance with data protection regulations, we inform you that for any personal data included in this report, rights of access, rectification, objection, and cancellation may be exercised before COMISARIADO ESPAÑOL MARÍTIMO SERVICIOS DE PERITAJES, S.L., located at Pintor Juan Gris Street, no. 4 - 28020 - Madrid.</string>
     <string name="report_location_date">In %1$s, %2$s</string>
-    <string name="report_signature_block">SPANISH MARITIME COMMISSIONER\nSigned: Álvaro Pousada López\nAVERAGE ADJUSTER\nAPCAS No. 9367\n</string>
+    <string name="report_signature_block">COMISARIADO ESPAÑOL MARÍTIMO SERVICIOS DE PERITAJES, S.L.\nSigned: Álvaro Pousada López\nAVERAGE ADJUSTER\nAPCAS No. 9367\n</string>
     <string name="overwrite_or_copy_message">Do you want to overwrite the original report or create a copy?</string>
     <string name="save_changes_title">Save changes</string>
     <string name="overwrite">OVERWRITE</string>

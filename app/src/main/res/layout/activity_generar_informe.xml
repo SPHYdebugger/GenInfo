@@ -256,34 +256,32 @@
             android:text="@string/attach_photos"
             android:textColor="@android:color/white" />
 
-
-        <!-- Botón Generar Informe -->
-        <CheckBox
-            android:id="@+id/checkboxEnviarPdf"
-            android:layout_width="336dp"
-            android:layout_height="wrap_content"
+        <!-- Línea horizontal de separación -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:checked="false"
-            android:text="@string/send_pdf_auto_email" />
+            android:background="@android:color/darker_gray" />
 
+        <!-- Botón Generar Informe (Ahora grande) -->
         <Button
             android:id="@+id/btnGenerarInforme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="#007bbb"
-            android:text="@string/generate_report"
-            android:textColor="@android:color/white" />
-
-        <!-- Botón Volver al inicio -->
-        <Button
-            android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="63dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/boton_redondeado"
-            android:enabled="true"
+            android:text="@string/generate_report"
+            android:textColor="@android:color/white" />
+
+        <!-- Botón Volver al inicio (Ahora pequeño y rojo) -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#8B1A1A"
+            android:background="@drawable/boton_redondeado_rojo"
             android:text="@string/back_to_menu"
             android:textColor="@android:color/white" />
 

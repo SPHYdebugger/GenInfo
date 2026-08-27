@@ -2,6 +2,7 @@ package com.comismar.informes.view.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -40,6 +41,8 @@ import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +54,6 @@ public class EditarInformeActivity extends Activity {
     private Button btnAdjuntarFotos, btnGenerarInforme, btnBack;
     private LinearLayout layoutImagenesAdjuntas;
     private TextView textAdjuntos;
-    private CheckBox checkboxEnviarPdf;
     private View overlayBloqueo;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -78,7 +80,6 @@ public class EditarInformeActivity extends Activity {
         btnBack = findViewById(R.id.btnBack);
         layoutImagenesAdjuntas = findViewById(R.id.layoutImagenesAdjuntas);
         textAdjuntos = findViewById(R.id.textAdjuntos);
-        checkboxEnviarPdf = findViewById(R.id.checkboxEnviarPdf);
         overlayBloqueo = findViewById(R.id.overlayBloqueo);
 
         btnGenerarInforme.setText(R.string.modify_report);
@@ -191,7 +192,7 @@ public class EditarInformeActivity extends Activity {
         String observaciones = ((EditText) findViewById(R.id.inputObservaciones)).getText().toString();
         String referencia = inputReferencia.getText().toString().trim();
         String lugar = inputLugar.getText().toString().trim();
-        boolean enviarPorCorreo = checkboxEnviarPdf.isChecked();
+        boolean enviarPorCorreo = AppSettings.isAutoSendEmailEnabled(this);
 
         File pdfGenerado = InformePdfGenerator.generarPdfDesdeDatos(
                 this,
@@ -367,6 +368,7 @@ public class EditarInformeActivity extends Activity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && uriFotoActual != null) {
                 imagenesAdjuntas.add(uriFotoActual);
+                añadirImagenAGaleria(uriFotoActual); // Copiar a la galería pública
                 Toast.makeText(this, R.string.photo_taken, Toast.LENGTH_SHORT).show();
                 actualizarListaImagenes();
             } else if (requestCode == REQUEST_IMAGE_GALLERY && data != null) {
@@ -442,6 +444,39 @@ public class EditarInformeActivity extends Activity {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uriFotoActual);
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
+        }
+    }
+
+    private void añadirImagenAGaleria(Uri uriPrivada) {
+        if (uriPrivada == null) return;
+        try {
+            ContentValues values = new ContentValues();
+            String fileName = "GenInfor_" + System.currentTimeMillis() + ".jpg";
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/GenInfor");
+                values.put(MediaStore.Images.Media.IS_PENDING, 1);
+            }
+
+            Uri externalUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            if (externalUri != null) {
+                try (InputStream in = getContentResolver().openInputStream(uriPrivada);
+                     OutputStream out = getContentResolver().openOutputStream(externalUri)) {
+                    byte[] buffer = new byte[8192];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                }
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    values.clear();
+                    values.put(MediaStore.Images.Media.IS_PENDING, 0);
+                    getContentResolver().update(externalUri, values, null, null);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
