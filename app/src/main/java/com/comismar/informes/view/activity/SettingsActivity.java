@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,17 +49,45 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void abrirDialogoCorreo() {
         String correoActual = AppSettings.getRecipientEmail(this);
+        String navalActual = AppSettings.getNavalEmail(this);
+        String cargoActual = AppSettings.getCargoEmail(this);
         boolean autoEnvioActual = AppSettings.isAutoSendEmailEnabled(this);
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(50, 40, 50, 10);
 
+        // Correo Backup
+        TextView labelBackup = new TextView(this);
+        labelBackup.setText(R.string.recipient_account_message);
+        layout.addView(labelBackup);
+        
         EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         input.setText(correoActual);
-        input.setHint(R.string.recipient_account_message);
         layout.addView(input);
+
+        // Correo Naval
+        TextView labelNaval = new TextView(this);
+        labelNaval.setText(R.string.recipient_naval_message);
+        labelNaval.setPadding(0, 20, 0, 0);
+        layout.addView(labelNaval);
+
+        EditText inputNaval = new EditText(this);
+        inputNaval.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        inputNaval.setText(navalActual);
+        layout.addView(inputNaval);
+
+        // Correo Cargo
+        TextView labelCargo = new TextView(this);
+        labelCargo.setText(R.string.recipient_cargo_message);
+        labelCargo.setPadding(0, 20, 0, 0);
+        layout.addView(labelCargo);
+
+        EditText inputCargo = new EditText(this);
+        inputCargo.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        inputCargo.setText(cargoActual);
+        layout.addView(inputCargo);
 
         CheckBox cbAutoSend = new CheckBox(this);
         cbAutoSend.setText(R.string.send_pdf_auto_email);
@@ -71,16 +100,26 @@ public class SettingsActivity extends AppCompatActivity {
                 .setView(layout)
                 .setPositiveButton(R.string.save, (dialog, which) -> {
                     String nuevoCorreo = input.getText().toString().trim();
-                    if (nuevoCorreo.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(nuevoCorreo).matches()) {
+                    String nuevoNaval = inputNaval.getText().toString().trim();
+                    String nuevoCargo = inputCargo.getText().toString().trim();
+
+                    if (!isValidEmail(nuevoCorreo) || !isValidEmail(nuevoNaval) || !isValidEmail(nuevoCargo)) {
                         Toast.makeText(this, R.string.invalid_email, Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                     AppSettings.setRecipientEmail(this, nuevoCorreo);
+                    AppSettings.setNavalEmail(this, nuevoNaval);
+                    AppSettings.setCargoEmail(this, nuevoCargo);
                     AppSettings.setAutoSendEmailEnabled(this, cbAutoSend.isChecked());
                     Toast.makeText(this, R.string.email_updated, Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private boolean isValidEmail(String email) {
+        return !email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private void confirmarBorradoTotal() {

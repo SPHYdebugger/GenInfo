@@ -11,6 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,8 +28,9 @@ public class MailSender {
     public MailSender(String usuario, String contraseña) {
     }
 
-    public void enviarCorreo(Context context, String asunto, String cuerpoHtml, String desde, String hacia, File archivoAdjunto) throws Exception {
-        AppLogger.logInfo(context, "MailSender", "Iniciando envío HTML a: " + hacia);
+    public void enviarCorreo(Context context, String asunto, String cuerpoHtml, String desde, List<String> hacia, File archivoAdjunto) throws Exception {
+        String destinatariosStr = hacia != null ? String.join(", ", hacia) : "ninguno";
+        AppLogger.logInfo(context, "MailSender", "Iniciando envío HTML a: " + destinatariosStr);
         
         OkHttpClient client = new OkHttpClient();
 
@@ -38,11 +41,15 @@ public class MailSender {
         sender.addProperty("email", desde);
         root.add("sender", sender);
 
-        JsonArray to = new JsonArray();
-        JsonObject recipient = new JsonObject();
-        recipient.addProperty("email", hacia);
-        to.add(recipient);
-        root.add("to", to);
+        JsonArray toArray = new JsonArray();
+        if (hacia != null) {
+            for (String email : hacia) {
+                JsonObject recipient = new JsonObject();
+                recipient.addProperty("email", email);
+                toArray.add(recipient);
+            }
+        }
+        root.add("to", toArray);
 
         root.addProperty("subject", asunto);
         root.addProperty("htmlContent", cuerpoHtml);
@@ -85,7 +92,9 @@ public class MailSender {
 
     public void enviarCorreoKeepAlive(Context context, String emailSistema) throws Exception {
         String body = "<html><body><p>Pulso de actividad para mantener la API Key activa.</p></body></html>";
-        enviarCorreo(context, "Renovación por inactividad", body, emailSistema, emailSistema, null);
+        List<String> list = new ArrayList<>();
+        list.add(emailSistema);
+        enviarCorreo(context, "Renovación por inactividad", body, emailSistema, list, null);
     }
 
     public static String getResourceToBase64(Context context, int resourceId) {

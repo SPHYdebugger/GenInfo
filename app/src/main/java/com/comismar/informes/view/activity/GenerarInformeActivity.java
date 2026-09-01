@@ -96,10 +96,13 @@ public class GenerarInformeActivity extends Activity {
         btnAdjuntarFotos = findViewById(R.id.btnAdjuntarFotos);
         btnGenerarInforme = findViewById(R.id.btnGenerarInforme);
         btnBack = findViewById(R.id.btnBack);
-        btnAdjuntarFotos.setOnClickListener(v -> mostrarDialogoFuenteImagen());
         layoutImagenesAdjuntas = findViewById(R.id.layoutImagenesAdjuntas);
         textAdjuntos = findViewById(R.id.textAdjuntos);
         overlayBloqueo = findViewById(R.id.overlayBloqueo);
+
+        CheckBox cbSendNavalCopy = findViewById(R.id.cbSendNavalCopy);
+        String navalEmail = AppSettings.getNavalEmail(this);
+        cbSendNavalCopy.setText(getString(R.string.checkbox_send_naval_copy, navalEmail));
 
         btnAdjuntarFotos.setOnClickListener(v -> mostrarDialogoFuenteImagen());
 
@@ -222,6 +225,7 @@ public class GenerarInformeActivity extends Activity {
 
         // Guardar en la base de datos
         Informe nuevoInforme = new Informe();
+        nuevoInforme.tipoInforme = "NAVAL";
         nuevoInforme.tipo = nombreBarco;
         nuevoInforme.referencia = referencia;
         nuevoInforme.trabajo = siniestro;
@@ -253,8 +257,10 @@ public class GenerarInformeActivity extends Activity {
         }
 
         if (enviarPorCorreo) {
-            final String destinatario = AppSettings.getRecipientEmail(this);
-            AppLogger.logInfo(this, "GenerarInformeActivity", "Preparando envío de correo a: " + destinatario);
+            final String destinatarioBackup = AppSettings.getRecipientEmail(this);
+            final boolean enviarCopiaNaval = ((CheckBox) findViewById(R.id.cbSendNavalCopy)).isChecked();
+            
+            AppLogger.logInfo(this, "GenerarInformeActivity", "Preparando envío de correo. Backup: " + destinatarioBackup);
             new Thread(() -> {
                 try {
                     MailSender sender = new MailSender("infogenpdf@gmail.com", "lwoi wagz zywo udae");
@@ -266,12 +272,19 @@ public class GenerarInformeActivity extends Activity {
                             nombreBarco,
                             matricula
                     );
+                    
+                    List<String> destinatarios = new ArrayList<>();
+                    destinatarios.add(destinatarioBackup);
+                    if (enviarCopiaNaval) {
+                        destinatarios.add(AppSettings.getNavalEmail(getApplicationContext()));
+                    }
+
                     sender.enviarCorreo(
                             getApplicationContext(),
                             getString(R.string.email_subject_report, referencia),
                             cuerpoHtml,
                             "infogenpdf@gmail.com",
-                            destinatario,
+                            destinatarios,
                             pdfGenerado);
                     runOnUiThread(() -> mostrarToastsEnCadena(
                             new String[] { getString(R.string.report_added_to_list), getString(R.string.pdf_sent_email) },
@@ -597,7 +610,7 @@ public class GenerarInformeActivity extends Activity {
         
         html.append("</table>");
         html.append("<div style=\"margin-top: 30px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #777;\">");
-        html.append("<p>Informe creado automáticamente por la app <strong>GenInfor V 3.0</strong></p>");
+        html.append("<p>Informe creado automáticamente por la app <strong>GenInfor V 4.0</strong></p>");
         html.append("<p>Desarrollada por <strong>Santiago Pérez</strong></p>");
         html.append("</div></body></html>");
         

@@ -48,6 +48,15 @@
             android:name=".view.activity.GenerarInformeActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
+        <activity
+            android:name=".view.activity.SeleccionTipoInformeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.GenerarInformeMercanciaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.EditarInformeMercanciaActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".view.activity.ListaInformesActivity"

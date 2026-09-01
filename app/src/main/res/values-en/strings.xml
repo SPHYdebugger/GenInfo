@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GenINFOR</string>
-    <string name="splash_version">GenInfor v3.0</string>
+    <string name="splash_version">GenInfor v4.0</string>
 
     <string name="generate_report">GENERATE REPORT</string>
     <string name="view_reports">VIEW REPORTS</string>
@@ -54,8 +54,8 @@
     <string name="report_added_to_list">Report added to list</string>
     <string name="pdf_sent_email">PDF sent by email</string>
     <string name="error_sending_pdf">Error sending PDF</string>
-    <string name="email_subject_report">AUTOIntervention report: %1$s</string>
-    <string name="email_body_report">Attached is the report generated with GenInfor v3.0.</string>
+    <string name="email_subject_report">Preliminary report: %1$s</string>
+    <string name="email_body_report">Attached is the report generated with GenInfor v4.0.</string>
 
     <string name="optimize_photos_title">Optimize photos</string>
     <string name="optimize_photos_message">Do you want to optimize photos so the generated PDF is as small as possible?\nIf you choose \"YES\", photo dimensions are kept but weight is compressed.</string>
@@ -138,12 +138,34 @@
     <string name="settings_change_language">CHANGE LANGUAGE (ES/EN)</string>
     <string name="settings_delete_all_data">DELETE ALL DATA</string>
     <string name="common_back">BACK</string>
+    <string name="back">BACK</string>
+
+    <string name="select_report_type_title">SELECT REPORT TYPE</string>
+    <string name="report_type_naval">NAVAL SURVEY</string>
+    <string name="report_type_mercancia">CARGO SURVEY</string>
+
+    <!-- Merchandise Specific Fields -->
+    <string name="field_insured">INSURED</string>
+    <string name="field_inspection_date">INSPECTION DATE</string>
+    <string name="field_other_people">OTHER PEOPLE</string>
+    <string name="field_packages_weight">PACKAGES AND WEIGHT</string>
+    <string name="field_merchandise_value">MERCHANDISE VALUE</string>
+    <string name="field_transport_mean">TRANSPORT MEAN</string>
+    <string name="field_loading_date">LOADING DATE / ORIGIN</string>
+    <string name="field_unloading_date">UNLOADING DATE / DESTINATION</string>
+    <string name="field_incident_date_place">INCIDENT DATE / PLACE</string>
+    <string name="field_updates">UPDATES</string>
+
+    <string name="checkbox_send_naval_copy">Send report copy to %1$s</string>
+    <string name="checkbox_send_cargo_copy">Send report copy to %1$s</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
 
     <string name="current_email">Current email: %1$s</string>
     <string name="recipient_account_title">Recipient account</string>
     <string name="recipient_account_message">Enter the new recipient email:</string>
+    <string name="recipient_naval_message">Enter Naval email (copy):</string>
+    <string name="recipient_cargo_message">Enter Cargo email (copy):</string>
     <string name="invalid_email">Invalid email</string>
     <string name="email_updated">Email updated</string>
 

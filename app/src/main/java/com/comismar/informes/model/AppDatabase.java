@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Informe.class}, version = 2)
+@Database(entities = {Informe.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract InformeDao informeDao();
 
@@ -18,7 +18,7 @@ public abstract class AppDatabase extends RoomDatabase {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "comismar_db")
                     .allowMainThreadQueries() // ⚠️ SOLO para pruebas
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build();
         }
         return INSTANCE;
@@ -39,6 +39,23 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE informes ADD COLUMN observaciones TEXT");
             database.execSQL("ALTER TABLE informes ADD COLUMN doc_pendiente TEXT");
             database.execSQL("ALTER TABLE informes ADD COLUMN fotos_uris TEXT");
+        }
+    };
+
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE informes ADD COLUMN tipo_informe TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN asegurado TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN fecha_inspeccion TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN otras_personas TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN bultos_peso TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN valor_mercancia TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN medio_transporte TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN fecha_carga TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN fecha_descarga TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN fecha_siniestro_lugar TEXT");
+            database.execSQL("ALTER TABLE informes ADD COLUMN actualizaciones TEXT");
         }
     };
 }

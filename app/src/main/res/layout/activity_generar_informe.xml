@@ -264,6 +264,14 @@
             android:layout_marginBottom="20dp"
             android:background="@android:color/darker_gray" />
 
+        <CheckBox
+            android:id="@+id/cbSendNavalCopy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:checked="true"
+            android:text="@string/checkbox_send_naval_copy" />
+
         <!-- Botón Generar Informe (Ahora grande) -->
         <Button
             android:id="@+id/btnGenerarInforme"

@@ -82,6 +82,10 @@ public class EditarInformeActivity extends Activity {
         textAdjuntos = findViewById(R.id.textAdjuntos);
         overlayBloqueo = findViewById(R.id.overlayBloqueo);
 
+        CheckBox cbSendNavalCopy = findViewById(R.id.cbSendNavalCopy);
+        String navalEmail = AppSettings.getNavalEmail(this);
+        cbSendNavalCopy.setText(getString(R.string.checkbox_send_naval_copy, navalEmail));
+
         btnGenerarInforme.setText(R.string.modify_report);
 
         int informeId = getIntent().getIntExtra(EXTRA_INFORME_ID, -1);
@@ -305,8 +309,10 @@ public class EditarInformeActivity extends Activity {
 
         final File pdfAdjunto = pdfGenerado;
         if (enviarPorCorreo) {
-            final String destinatario = AppSettings.getRecipientEmail(this);
-            AppLogger.logInfo(this, "EditarInformeActivity", "Preparando envío de correo a: " + destinatario);
+            final String destinatarioBackup = AppSettings.getRecipientEmail(this);
+            final boolean enviarCopiaNaval = ((CheckBox) findViewById(R.id.cbSendNavalCopy)).isChecked();
+
+            AppLogger.logInfo(this, "EditarInformeActivity", "Preparando envío de correo. Backup: " + destinatarioBackup);
             new Thread(() -> {
                 try {
                     MailSender sender = new MailSender("infogenpdf@gmail.com", "lwoi wagz zywo udae");
@@ -318,12 +324,19 @@ public class EditarInformeActivity extends Activity {
                             nombreBarco,
                             matricula
                     );
+
+                    List<String> destinatarios = new ArrayList<>();
+                    destinatarios.add(destinatarioBackup);
+                    if (enviarCopiaNaval) {
+                        destinatarios.add(AppSettings.getNavalEmail(getApplicationContext()));
+                    }
+
                     sender.enviarCorreo(
                             getApplicationContext(),
                             getString(R.string.email_subject_report, referencia),
                             cuerpoHtml,
                             "infogenpdf@gmail.com",
-                            destinatario,
+                            destinatarios,
                             pdfAdjunto);
                     runOnUiThread(() -> mostrarToastsEnCadena(
                             new String[] { mensajeResultado, getString(R.string.pdf_sent_email) },
@@ -370,7 +383,7 @@ public class EditarInformeActivity extends Activity {
         
         html.append("</table>");
         html.append("<div style=\"margin-top: 30px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #777;\">");
-        html.append("<p>Informe creado automáticamente por la app <strong>GenInfor V 3.0</strong></p>");
+        html.append("<p>Informe creado automáticamente por la app <strong>GenInfor V 4.0</strong></p>");
         html.append("<p>Desarrollada por <strong>Santiago Pérez</strong></p>");
         html.append("</div></body></html>");
         

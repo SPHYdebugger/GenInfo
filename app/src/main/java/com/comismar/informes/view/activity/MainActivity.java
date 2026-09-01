@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         TextView txtDatosContacto = findViewById(R.id.txtDatosContacto);
 
         btnNuevoInforme.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, GenerarInformeActivity.class);
+            Intent intent = new Intent(MainActivity.this, SeleccionTipoInformeActivity.class);
             startActivity(intent);
         });
 

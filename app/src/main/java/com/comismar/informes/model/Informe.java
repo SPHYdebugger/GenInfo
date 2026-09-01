@@ -10,6 +10,9 @@ public class Informe {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
+    @ColumnInfo(name = "tipo_informe")
+    public String tipoInforme; // "NAVAL" o "MERCANCIA"
+
     @ColumnInfo(name = "referencia")
     public String referencia;
 
@@ -63,5 +66,36 @@ public class Informe {
 
     @ColumnInfo(name = "fotos_uris")
     public String fotosUris;
+
+    // Campos específicos de Mercancía
+    @ColumnInfo(name = "asegurado")
+    public String asegurado;
+
+    @ColumnInfo(name = "fecha_inspeccion")
+    public String fechaInspeccion;
+
+    @ColumnInfo(name = "otras_personas")
+    public String otrasPersonas;
+
+    @ColumnInfo(name = "bultos_peso")
+    public String bultosPeso;
+
+    @ColumnInfo(name = "valor_mercancia")
+    public String valorMercancia;
+
+    @ColumnInfo(name = "medio_transporte")
+    public String medioTransporte;
+
+    @ColumnInfo(name = "fecha_carga")
+    public String fechaCarga;
+
+    @ColumnInfo(name = "fecha_descarga")
+    public String fechaDescarga;
+
+    @ColumnInfo(name = "fecha_siniestro_lugar")
+    public String fechaSiniestroLugar;
+
+    @ColumnInfo(name = "actualizaciones")
+    public String actualizaciones;
 
 }

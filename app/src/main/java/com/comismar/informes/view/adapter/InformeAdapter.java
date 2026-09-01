@@ -58,7 +58,10 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Informe informe = informes.get(position);
         holder.txtReferencia.setText(context.getString(R.string.reference_colon, informe.referencia));
-        holder.txtTipo.setText(context.getString(R.string.type_colon, informe.tipo));
+        
+        String tipoMostrar = informe.tipoInforme != null ? informe.tipoInforme : informe.tipo;
+        holder.txtTipo.setText(context.getString(R.string.type_colon, tipoMostrar));
+        
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
         String fechaFormateada = formato.format(new Date(informe.timestamp));
         holder.txtFecha.setText(context.getString(R.string.date_colon, fechaFormateada));

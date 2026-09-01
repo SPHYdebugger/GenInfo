@@ -79,8 +79,21 @@ public class PdfPreviewActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.report_not_found, Toast.LENGTH_SHORT).show();
             return;
         }
-        android.content.Intent intent = new android.content.Intent(this, EditarInformeActivity.class);
-        intent.putExtra(EditarInformeActivity.EXTRA_INFORME_ID, informeId);
+        
+        com.comismar.informes.model.Informe informe = com.comismar.informes.model.AppDatabase.getInstance(this).informeDao().obtenerPorId(informeId);
+        if (informe == null) {
+            Toast.makeText(this, R.string.report_not_found, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        android.content.Intent intent;
+        if ("MERCANCIA".equalsIgnoreCase(informe.tipoInforme)) {
+            intent = new android.content.Intent(this, EditarInformeMercanciaActivity.class);
+            intent.putExtra(EditarInformeMercanciaActivity.EXTRA_INFORME_ID, informeId);
+        } else {
+            intent = new android.content.Intent(this, EditarInformeActivity.class);
+            intent.putExtra(EditarInformeActivity.EXTRA_INFORME_ID, informeId);
+        }
         startActivity(intent);
     }
 

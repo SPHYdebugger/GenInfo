@@ -1,0 +1,9 @@
+- `[ ]` Update `MailSender.java` to support multiple recipients
+- `[ ]` Add new strings for checkboxes to `strings.xml`
+- `[ ]` Add CheckBox to `activity_generar_informe.xml`
+- `[ ]` Add CheckBox to `activity_generar_mercancia.xml`
+- `[ ]` Implement multi-recipient logic in `GenerarInformeActivity.java`
+- `[ ]` Implement multi-recipient logic in `EditarInformeActivity.java`
+- `[ ]` Implement multi-recipient logic in `GenerarInformeMercanciaActivity.java`
+- `[ ]` Implement multi-recipient logic in `EditarInformeMercanciaActivity.java`
+- `[ ]` Verify multi-recipient emails and logs

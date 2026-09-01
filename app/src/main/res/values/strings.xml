@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GenINFOR</string>
-    <string name="splash_version">GenInfor v3.0</string>
+    <string name="splash_version">GenInfor v4.0</string>
 
     <string name="generate_report">GENERAR INFORME</string>
     <string name="view_reports">VER INFORMES</string>
@@ -54,8 +54,8 @@
     <string name="report_added_to_list">Informe añadido a la lista</string>
     <string name="pdf_sent_email">PDF enviado por email</string>
     <string name="error_sending_pdf">Error al enviar PDF</string>
-    <string name="email_subject_report">AUTOInforme de intervención: %1$s</string>
-    <string name="email_body_report">Se adjunta el informe generado con GenInfor v3.0.</string>
+    <string name="email_subject_report">Informe preliminar: %1$s</string>
+    <string name="email_body_report">Se adjunta el informe generado con GenInfor v4.0.</string>
 
     <string name="optimize_photos_title">Optimizar fotos</string>
     <string name="optimize_photos_message">¿Quieres optimizar las fotos para que el PDF generado pese lo mínimo posible?\nSi eliges \"SI\", se mantendrá el tamaño de las fotos pero se comprimirá su peso.</string>
@@ -138,12 +138,34 @@
     <string name="settings_change_language">CAMBIAR IDIOMA (ES/EN)</string>
     <string name="settings_delete_all_data">BORRAR TODOS LOS DATOS</string>
     <string name="common_back">VOLVER</string>
+    <string name="back">VOLVER</string>
+
+    <string name="select_report_type_title">SELECCIONAR TIPO DE INFORME</string>
+    <string name="report_type_naval">PERITAJE NAVAL</string>
+    <string name="report_type_mercancia">PERITAJE MERCANCÍA</string>
+
+    <!-- Campos específicos Mercancía -->
+    <string name="field_insured">ASEGURADO</string>
+    <string name="field_inspection_date">FECHA INSPECCIÓN</string>
+    <string name="field_other_people">OTRAS PERSONAS</string>
+    <string name="field_packages_weight">BULTOS Y PESO</string>
+    <string name="field_merchandise_value">VALOR MERCANCÍA</string>
+    <string name="field_transport_mean">MEDIO DE TRANSPORTE</string>
+    <string name="field_loading_date">FECHA CARGA / ORIGEN</string>
+    <string name="field_unloading_date">FECHA DESCARGA / DESTINO</string>
+    <string name="field_incident_date_place">FECHA SINIESTRO / LUGAR</string>
+    <string name="field_updates">ACTUALIZACIONES</string>
+
+    <string name="checkbox_send_naval_copy">Enviar copia de informe a %1$s</string>
+    <string name="checkbox_send_cargo_copy">Enviar copia de informe a %1$s</string>
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
 
     <string name="current_email">Correo actual: %1$s</string>
     <string name="recipient_account_title">Cuenta destinataria</string>
     <string name="recipient_account_message">Introduce el nuevo correo destinatario:</string>
+    <string name="recipient_naval_message">Introduce el correo para Naval (copia):</string>
+    <string name="recipient_cargo_message">Introduce el correo para Mercancía (copia):</string>
     <string name="invalid_email">Correo no válido</string>
     <string name="email_updated">Correo actualizado</string>
 
