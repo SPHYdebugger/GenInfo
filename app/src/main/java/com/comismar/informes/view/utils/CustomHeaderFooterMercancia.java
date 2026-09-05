@@ -66,7 +66,7 @@ public class CustomHeaderFooterMercancia extends PdfPageEventHelper {
 
         // 3. TEXTO VERTICAL IZQUIERDA
         String fechaActual = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale.getDefault()).format(new Date());
-        String verticalText = String.format("Rev.: %s - Este documento es propiedad de COMISARIADO ESPAÑOL MARÍTIMO S.A. y de uso estrictamente confidencial...", fechaActual);
+        String verticalText = String.format("Rev.: %s - Este documento es propiedad de COMISARIADO ESPAÑOL MARÍTIMO S.A. y de uso estrictamente confidencial, no podrá ser utilizado ni distribuido sin autorización expresa de la dirección de la empresa.", fechaActual);
         
         cb.saveState();
         cb.beginText();
