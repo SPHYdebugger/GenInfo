@@ -48,8 +48,10 @@ public class InformePdfGenerator {
         String fechaHoy = new SimpleDateFormat(context.getString(R.string.report_date_long_pattern), reportLocale).format(new Date());
         try {
             Document document = new Document(PageSize.A4, 40, 40, 20, 20);
-            String nombreArchivo = "informe_" + referencia.replaceAll("[^a-zA-Z0-9_-]", "_") + "_" + System.currentTimeMillis() + ".pdf";
-
+            
+            String fechaArchivo = new SimpleDateFormat("ddMMyy", Locale.getDefault()).format(new Date());
+            String refLimpia = referencia.replaceAll("[^a-zA-Z0-9_-]", "_");
+            String nombreArchivo = refLimpia + "_informe_preliminar_" + fechaArchivo + ".pdf";
 
             file = new File(outputDir, nombreArchivo);
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));

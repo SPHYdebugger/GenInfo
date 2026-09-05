@@ -38,7 +38,9 @@ public class InformeMercanciaPdfGenerator {
     private static final Font FONT_SECTION = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE);
 
     public static File generarPdf(Context context, File dir, Informe informe, List<Uri> fotos, boolean optimizar) {
-        String fileName = "informe_mercancia_" + informe.referencia + "_" + System.currentTimeMillis() + ".pdf";
+        String fechaArchivo = new SimpleDateFormat("ddMMyy", Locale.getDefault()).format(new Date());
+        String refLimpia = informe.referencia != null ? informe.referencia.replaceAll("[^a-zA-Z0-9_-]", "_") : "SIN_REF";
+        String fileName = refLimpia + "_informe_preliminar_" + fechaArchivo + ".pdf";
         File file = new File(dir, fileName);
 
         // Aumentamos el margen superior (90) para dejar espacio a la cabecera
