@@ -216,13 +216,20 @@ public class GenerarInformeMercanciaActivity extends Activity {
                 MailSender sender = new MailSender(null, null);
                 String cuerpoHtml = construirCuerpoHtml(informe);
 
-                List<String> destinatarios = new ArrayList<>();
-                destinatarios.add(destinatarioBackup);
+                List<String> toEmails = new ArrayList<>();
+                List<String> bccEmails = new ArrayList<>();
+
                 if (enviarCopiaCargo) {
-                    destinatarios.add(AppSettings.getCargoEmail(getApplicationContext()));
+                    toEmails.add(AppSettings.getCargoEmail(getApplicationContext()));
                 }
 
-                sender.enviarCorreo(getApplicationContext(), getString(R.string.email_subject_report, informe.referencia), cuerpoHtml, "infogenpdf@gmail.com", destinatarios, pdf);
+                if (toEmails.isEmpty()) {
+                    toEmails.add(destinatarioBackup);
+                } else {
+                    bccEmails.add(destinatarioBackup);
+                }
+
+                sender.enviarCorreo(getApplicationContext(), getString(R.string.email_subject_report, informe.referencia), cuerpoHtml, "infogenpdf@gmail.com", toEmails, bccEmails, pdf);
                 runOnUiThread(() -> {
                     Toast.makeText(this, R.string.pdf_sent_email, Toast.LENGTH_SHORT).show();
                     finalizarFlujo();

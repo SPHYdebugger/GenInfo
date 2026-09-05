@@ -260,7 +260,7 @@ public class GenerarInformeActivity extends Activity {
             final String destinatarioBackup = AppSettings.getRecipientEmail(this);
             final boolean enviarCopiaNaval = ((CheckBox) findViewById(R.id.cbSendNavalCopy)).isChecked();
             
-            AppLogger.logInfo(this, "GenerarInformeActivity", "Preparando envío de correo. Backup: " + destinatarioBackup);
+            AppLogger.logInfo(this, "GenerarInformeActivity", "Preparando envío de correo. Backup (BCC): " + destinatarioBackup);
             new Thread(() -> {
                 try {
                     MailSender sender = new MailSender("infogenpdf@gmail.com", "lwoi wagz zywo udae");
@@ -273,10 +273,18 @@ public class GenerarInformeActivity extends Activity {
                             matricula
                     );
                     
-                    List<String> destinatarios = new ArrayList<>();
-                    destinatarios.add(destinatarioBackup);
+                    List<String> toEmails = new ArrayList<>();
+                    List<String> bccEmails = new ArrayList<>();
+                    
                     if (enviarCopiaNaval) {
-                        destinatarios.add(AppSettings.getNavalEmail(getApplicationContext()));
+                        toEmails.add(AppSettings.getNavalEmail(getApplicationContext()));
+                    }
+                    
+                    // El backup va en BCC si hay un destinatario principal, si no va en To
+                    if (toEmails.isEmpty()) {
+                        toEmails.add(destinatarioBackup);
+                    } else {
+                        bccEmails.add(destinatarioBackup);
                     }
 
                     sender.enviarCorreo(
@@ -284,7 +292,8 @@ public class GenerarInformeActivity extends Activity {
                             getString(R.string.email_subject_report, referencia),
                             cuerpoHtml,
                             "infogenpdf@gmail.com",
-                            destinatarios,
+                            toEmails,
+                            bccEmails,
                             pdfGenerado);
                     runOnUiThread(() -> mostrarToastsEnCadena(
                             new String[] { getString(R.string.report_added_to_list), getString(R.string.pdf_sent_email) },

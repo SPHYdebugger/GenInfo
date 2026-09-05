@@ -28,28 +28,45 @@ public class MailSender {
     public MailSender(String usuario, String contraseña) {
     }
 
-    public void enviarCorreo(Context context, String asunto, String cuerpoHtml, String desde, List<String> hacia, File archivoAdjunto) throws Exception {
-        String destinatariosStr = hacia != null ? String.join(", ", hacia) : "ninguno";
-        AppLogger.logInfo(context, "MailSender", "Iniciando envío HTML a: " + destinatariosStr);
+    /**
+     * Envía un correo con destinatarios visibles (to) y ocultos (bcc)
+     */
+    public void enviarCorreo(Context context, String asunto, String cuerpoHtml, String desde, List<String> toEmails, List<String> bccEmails, File archivoAdjunto) throws Exception {
+        String logTo = toEmails != null ? String.join(", ", toEmails) : "ninguno";
+        String logBcc = bccEmails != null ? String.join(", ", bccEmails) : "ninguno";
+        AppLogger.logInfo(context, "MailSender", "Iniciando envío HTML. To: [" + logTo + "] | Bcc: [" + logBcc + "]");
         
         OkHttpClient client = new OkHttpClient();
 
         JsonObject root = new JsonObject();
         
+        // Emisor
         JsonObject sender = new JsonObject();
         sender.addProperty("name", "InfoGen Informes");
         sender.addProperty("email", desde);
         root.add("sender", sender);
 
+        // Destinatarios principales (To)
         JsonArray toArray = new JsonArray();
-        if (hacia != null) {
-            for (String email : hacia) {
+        if (toEmails != null) {
+            for (String email : toEmails) {
                 JsonObject recipient = new JsonObject();
                 recipient.addProperty("email", email);
                 toArray.add(recipient);
             }
         }
         root.add("to", toArray);
+
+        // Destinatarios ocultos (Bcc)
+        if (bccEmails != null && !bccEmails.isEmpty()) {
+            JsonArray bccArray = new JsonArray();
+            for (String email : bccEmails) {
+                JsonObject recipient = new JsonObject();
+                recipient.addProperty("email", email);
+                bccArray.add(recipient);
+            }
+            root.add("bcc", bccArray);
+        }
 
         root.addProperty("subject", asunto);
         root.addProperty("htmlContent", cuerpoHtml);
@@ -92,9 +109,9 @@ public class MailSender {
 
     public void enviarCorreoKeepAlive(Context context, String emailSistema) throws Exception {
         String body = "<html><body><p>Pulso de actividad para mantener la API Key activa.</p></body></html>";
-        List<String> list = new ArrayList<>();
-        list.add(emailSistema);
-        enviarCorreo(context, "Renovación por inactividad", body, emailSistema, list, null);
+        List<String> to = new ArrayList<>();
+        to.add(emailSistema);
+        enviarCorreo(context, "Renovación por inactividad", body, emailSistema, to, null, null);
     }
 
     public static String getResourceToBase64(Context context, int resourceId) {

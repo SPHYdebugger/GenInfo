@@ -312,7 +312,7 @@ public class EditarInformeActivity extends Activity {
             final String destinatarioBackup = AppSettings.getRecipientEmail(this);
             final boolean enviarCopiaNaval = ((CheckBox) findViewById(R.id.cbSendNavalCopy)).isChecked();
 
-            AppLogger.logInfo(this, "EditarInformeActivity", "Preparando envío de correo. Backup: " + destinatarioBackup);
+            AppLogger.logInfo(this, "EditarInformeActivity", "Preparando envío de correo. Backup (BCC): " + destinatarioBackup);
             new Thread(() -> {
                 try {
                     MailSender sender = new MailSender("infogenpdf@gmail.com", "lwoi wagz zywo udae");
@@ -325,10 +325,17 @@ public class EditarInformeActivity extends Activity {
                             matricula
                     );
 
-                    List<String> destinatarios = new ArrayList<>();
-                    destinatarios.add(destinatarioBackup);
+                    List<String> toEmails = new ArrayList<>();
+                    List<String> bccEmails = new ArrayList<>();
+
                     if (enviarCopiaNaval) {
-                        destinatarios.add(AppSettings.getNavalEmail(getApplicationContext()));
+                        toEmails.add(AppSettings.getNavalEmail(getApplicationContext()));
+                    }
+
+                    if (toEmails.isEmpty()) {
+                        toEmails.add(destinatarioBackup);
+                    } else {
+                        bccEmails.add(destinatarioBackup);
                     }
 
                     sender.enviarCorreo(
@@ -336,7 +343,8 @@ public class EditarInformeActivity extends Activity {
                             getString(R.string.email_subject_report, referencia),
                             cuerpoHtml,
                             "infogenpdf@gmail.com",
-                            destinatarios,
+                            toEmails,
+                            bccEmails,
                             pdfAdjunto);
                     runOnUiThread(() -> mostrarToastsEnCadena(
                             new String[] { mensajeResultado, getString(R.string.pdf_sent_email) },
