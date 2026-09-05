@@ -124,6 +124,8 @@ public class InformeMercanciaPdfGenerator {
             document.add(crearParrafoBloque(informe.actualizaciones));
 
             // PAGINA 2: REPORTAJE FOTOGRÁFICO
+            // Reducimos el margen superior a la mitad (aprox 45) para evitar desbordamiento
+            document.setMargins(36, 36, 55, 36);
             document.newPage();
             document.add(new Paragraph("REPORTAJE FOTOGRÁFICO", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
             document.add(Chunk.NEWLINE);
@@ -133,7 +135,9 @@ public class InformeMercanciaPdfGenerator {
                 photoTable.setWidthPercentage(100);
                 photoTable.setSpacingBefore(10f);
 
+                int count = 0;
                 for (Uri uri : fotos) {
+                    if (count >= 4) break;
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -146,11 +150,24 @@ public class InformeMercanciaPdfGenerator {
                         cell.setPadding(5);
                         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                         photoTable.addCell(cell);
+                        count++;
                     } catch (Exception e) {
-                        photoTable.addCell(new PdfPCell(new Paragraph("Error al cargar imagen")));
+                        PdfPCell errorCell = new PdfPCell(new Paragraph("Error al cargar imagen"));
+                        errorCell.setBorder(Rectangle.NO_BORDER);
+                        photoTable.addCell(errorCell);
+                        count++;
                     }
                 }
-                photoTable.completeRow();
+                
+                // Rellenamos con celdas totalmente vacías y sin bordes hasta completar 4 (siempre que haya al menos una foto)
+                while (count < 4) {
+                    PdfPCell emptyCell = new PdfPCell();
+                    emptyCell.setBorder(Rectangle.NO_BORDER);
+                    emptyCell.setFixedHeight(180); // Mantenemos el espacio pero invisible
+                    photoTable.addCell(emptyCell);
+                    count++;
+                }
+                
                 document.add(photoTable);
             }
 

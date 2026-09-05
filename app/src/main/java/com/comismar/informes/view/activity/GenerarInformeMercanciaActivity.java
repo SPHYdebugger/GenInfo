@@ -351,8 +351,8 @@ public class GenerarInformeMercanciaActivity extends Activity {
         for (Uri uri : imagenesAdjuntas) {
             TextView tv = new TextView(this);
             tv.setText(uri.getLastPathSegment());
-            tv.setTextColor(android.graphics.Color.WHITE);
-            tv.setPadding(0, 4, 0, 4);
+            tv.setTextColor(android.graphics.Color.BLACK);
+            tv.setPadding(0, 8, 0, 8);
             layoutImagenesAdjuntas.addView(tv);
         }
     }
