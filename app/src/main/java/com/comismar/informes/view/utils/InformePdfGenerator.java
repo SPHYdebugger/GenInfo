@@ -219,7 +219,7 @@ public class InformePdfGenerator {
 
 
             // Crear párrafo alineado a la derecha
-            Paragraph parrafoFecha = new Paragraph(context.getString(R.string.report_location_date, lugar, fechaHoy), fontLabel);
+            Paragraph parrafoFecha = new Paragraph(context.getString(R.string.report_location_date, "Vigo - Pontevedra", fechaHoy), fontLabel);
             parrafoFecha.setAlignment(Element.ALIGN_RIGHT);
 
             // Agregar al documento

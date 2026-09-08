@@ -176,8 +176,8 @@ public class InformeMercanciaPdfGenerator {
             // TEXTO LEGAL Y FIRMA
             document.add(new Paragraph("\n\n" + context.getString(R.string.report_legal_text), new Font(Font.FontFamily.HELVETICA, 7, Font.NORMAL)));
             
-            String fechaActual = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale.getDefault()).format(new Date());
-            Paragraph pLugarFecha = new Paragraph("\nEn " + informe.lugar + ", " + fechaActual, FONT_VALUE);
+            String fechaActual = new SimpleDateFormat(context.getString(R.string.report_date_long_pattern), Locale.getDefault()).format(new Date());
+            Paragraph pLugarFecha = new Paragraph("\n" + context.getString(R.string.report_location_date, "Vigo - Pontevedra", fechaActual), FONT_VALUE);
             pLugarFecha.setAlignment(Element.ALIGN_RIGHT);
             document.add(pLugarFecha);
 
