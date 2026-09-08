@@ -66,15 +66,12 @@ public class CustomHeaderFooterMercancia extends PdfPageEventHelper {
 
         // 3. TEXTO VERTICAL IZQUIERDA
         String fechaActual = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale.getDefault()).format(new Date());
-        String verticalText = String.format("Rev.: %s - Este documento es propiedad de COMISARIADO ESPAÑOL MARÍTIMO S.A. y de uso estrictamente confidencial, no podrá ser utilizado ni distribuido sin autorización expresa de la dirección de la empresa.", fechaActual);
+        String verticalText = String.format("Rev.: %s - Este documento es propiedad de COMISMAR, S.A. y de uso estrictamente confidencial, no podrá ser utilizado ni distribuido sin autorización expresa de la dirección de la empresa.", fechaActual);
         
         cb.saveState();
-        cb.beginText();
-        cb.setFontAndSize(fontSmall.getCalculatedBaseFont(false), 6);
-        cb.setColorFill(BaseColor.GRAY);
-        cb.setTextMatrix(0, 1, -1, 0, 25, 400); // Rotación
-        cb.showText(verticalText);
-        cb.endText();
+        Phrase phraseVertical = new Phrase(verticalText, new Font(Font.FontFamily.HELVETICA, 6, Font.NORMAL, BaseColor.GRAY));
+        // Centrado verticalmente (421 es la mitad de A4) y a 25 puntos del borde izquierdo
+        ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, phraseVertical, 25, 421, 90);
         cb.restoreState();
 
         // 4. NÚMERO DE PÁGINA (ABAJO)

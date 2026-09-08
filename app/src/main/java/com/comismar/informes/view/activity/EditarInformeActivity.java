@@ -391,7 +391,7 @@ public class EditarInformeActivity extends Activity {
         
         html.append("</table>");
         html.append("<div style=\"margin-top: 30px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #777;\">");
-        html.append("<p>Informe creado automáticamente por la app <strong>GenInfor V 4.0</strong></p>");
+        html.append("<p>Informe creado automáticamente por la app <strong>GenInfor V 4.1</strong></p>");
         html.append("<p>Desarrollada por <strong>Santiago Pérez</strong></p>");
         html.append("</div></body></html>");
         

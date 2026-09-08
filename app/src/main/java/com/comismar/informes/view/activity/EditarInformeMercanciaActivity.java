@@ -311,7 +311,7 @@ public class EditarInformeMercanciaActivity extends Activity {
         appendRow(html, "Asegurado", inf.asegurado);
         appendRow(html, "Lugar", inf.lugar);
         html.append("</table>")
-            .append("<p style=\"margin-top: 20px;\">Se adjunta el informe generado con GenInfor v4.0.</p>")
+            .append("<p style=\"margin-top: 20px;\">Se adjunta el informe generado con GenInfor v4.1.</p>")
             .append("<div style=\"margin-top: 30px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #777;\">")
             .append("<p>Desarrollada por <strong>Santiago Pérez</strong></p>")
             .append("</div></body></html>");

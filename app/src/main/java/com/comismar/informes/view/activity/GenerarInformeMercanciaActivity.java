@@ -258,7 +258,7 @@ public class GenerarInformeMercanciaActivity extends Activity {
         appendRow(html, "Asegurado", inf.asegurado);
         appendRow(html, "Lugar", inf.lugar);
         html.append("</table>");
-        html.append("<p style=\"margin-top: 20px;\">Se adjunta el informe generado con GenInfor v4.0.</p>");
+        html.append("<p style=\"margin-top: 20px;\">Se adjunta el informe generado con GenInfor v4.1.</p>");
         html.append("<div style=\"margin-top: 30px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #777;\">");
         html.append("<p>Desarrollada por <strong>Santiago Pérez</strong></p>");
         html.append("</div></body></html>");
