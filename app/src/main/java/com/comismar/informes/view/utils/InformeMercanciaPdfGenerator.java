@@ -140,20 +140,29 @@ public class InformeMercanciaPdfGenerator {
                 int count = 0;
                 for (Uri uri : fotos) {
                     if (count >= 4) break;
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, optimizar ? 30 : 80, stream);
-                        Image img = Image.getInstance(stream.toByteArray());
-                        img.scaleToFit(250, 180);
-                        
-                        PdfPCell cell = new PdfPCell(img);
-                        cell.setBorder(Rectangle.NO_BORDER);
-                        cell.setPadding(5);
-                        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                        photoTable.addCell(cell);
-                        count++;
+                    try (java.io.InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
+                        if (inputStream != null) {
+                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                            if (bitmap != null) {
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, optimizar ? 30 : 80, stream);
+                                Image img = Image.getInstance(stream.toByteArray());
+                                img.scaleToFit(250, 180);
+
+                                PdfPCell cell = new PdfPCell(img);
+                                cell.setBorder(Rectangle.NO_BORDER);
+                                cell.setPadding(5);
+                                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                                photoTable.addCell(cell);
+                                count++;
+                            } else {
+                                throw new Exception("Bitmap nulo al decodificar stream");
+                            }
+                        } else {
+                            throw new Exception("InputStream nulo para la URI");
+                        }
                     } catch (Exception e) {
+                        e.printStackTrace();
                         PdfPCell errorCell = new PdfPCell(new Paragraph("Error al cargar imagen"));
                         errorCell.setBorder(Rectangle.NO_BORDER);
                         photoTable.addCell(errorCell);

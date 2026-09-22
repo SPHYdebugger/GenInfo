@@ -37,9 +37,11 @@ import com.comismar.informes.view.utils.AppSettings;
 import com.comismar.informes.view.utils.InformeMercanciaPdfGenerator;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import android.graphics.BitmapFactory;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
@@ -331,21 +333,61 @@ public class GenerarInformeMercanciaActivity extends Activity {
         startActivityForResult(Intent.createChooser(intent, getString(R.string.select_images)), REQUEST_IMAGE_GALLERY);
     }
 
+    private Uri copiarImagenAApp(Uri origen) {
+        if (origen == null) return null;
+        try {
+            File almacenamientoDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            if (almacenamientoDir == null) return null;
+            File destino = File.createTempFile("galeria_", ".jpg", almacenamientoDir);
+            try (InputStream in = getContentResolver().openInputStream(origen);
+                 OutputStream out = new FileOutputStream(destino)) {
+                if (in == null) return null;
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+            }
+            return Uri.fromFile(destino);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                imagenesAdjuntas.add(uriFotoActual);
-                actualizarListaImagenes();
+            if (requestCode == REQUEST_IMAGE_CAPTURE && uriFotoActual != null) {
+                if (imagenesAdjuntas.size() < 4) {
+                    imagenesAdjuntas.add(uriFotoActual);
+                    Toast.makeText(this, R.string.photo_taken, Toast.LENGTH_SHORT).show();
+                    actualizarListaImagenes();
+                } else {
+                    Toast.makeText(this, R.string.max_4_images, Toast.LENGTH_SHORT).show();
+                }
             } else if (requestCode == REQUEST_IMAGE_GALLERY && data != null) {
+                int slotsDisponibles = 4 - imagenesAdjuntas.size();
+                if (slotsDisponibles <= 0) {
+                    Toast.makeText(this, R.string.max_4_images, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (data.getClipData() != null) {
                     int count = data.getClipData().getItemCount();
-                    for (int i = 0; i < count && imagenesAdjuntas.size() < 4; i++) {
-                        imagenesAdjuntas.add(data.getClipData().getItemAt(i).getUri());
+                    int añadidas = 0;
+                    for (int i = 0; i < count && añadidas < slotsDisponibles; i++) {
+                        Uri uri = data.getClipData().getItemAt(i).getUri();
+                        Uri copia = copiarImagenAApp(uri);
+                        imagenesAdjuntas.add(copia != null ? copia : uri);
+                        añadidas++;
                     }
+                    Toast.makeText(this, getString(R.string.photos_selected_count, añadidas), Toast.LENGTH_SHORT).show();
                 } else if (data.getData() != null) {
-                    imagenesAdjuntas.add(data.getData());
+                    Uri imagenGaleria = data.getData();
+                    Uri copia = copiarImagenAApp(imagenGaleria);
+                    imagenesAdjuntas.add(copia != null ? copia : imagenGaleria);
+                    Toast.makeText(this, R.string.photo_selected, Toast.LENGTH_SHORT).show();
                 }
                 actualizarListaImagenes();
             }
@@ -354,14 +396,80 @@ public class GenerarInformeMercanciaActivity extends Activity {
 
     private void actualizarListaImagenes() {
         layoutImagenesAdjuntas.removeAllViews();
-        textAdjuntos.setVisibility(imagenesAdjuntas.isEmpty() ? View.GONE : View.VISIBLE);
-        for (Uri uri : imagenesAdjuntas) {
-            TextView tv = new TextView(this);
-            tv.setText(uri.getLastPathSegment());
-            tv.setTextColor(android.graphics.Color.BLACK);
-            tv.setPadding(0, 8, 0, 8);
-            layoutImagenesAdjuntas.addView(tv);
+
+        if (imagenesAdjuntas.isEmpty()) {
+            textAdjuntos.setVisibility(View.GONE);
+            return;
         }
+
+        textAdjuntos.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < imagenesAdjuntas.size(); i++) {
+            Uri uri = imagenesAdjuntas.get(i);
+
+            LinearLayout contenedor = new LinearLayout(this);
+            contenedor.setOrientation(LinearLayout.HORIZONTAL);
+            contenedor.setPadding(0, 8, 0, 8);
+            contenedor.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            contenedor.setGravity(Gravity.CENTER_VERTICAL);
+
+            ImageView miniatura = new ImageView(this);
+            miniatura.setLayoutParams(new LinearLayout.LayoutParams(100, 100));
+            miniatura.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            try (InputStream inputStream = getContentResolver().openInputStream(uri)) {
+                if (inputStream != null) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    miniatura.setImageBitmap(bitmap);
+                }
+            } catch (SecurityException se) {
+                imagenesAdjuntas.remove(uri);
+                Toast.makeText(this, R.string.photo_access_lost, Toast.LENGTH_SHORT).show();
+                actualizarListaImagenes();
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            TextView nombre = new TextView(this);
+            nombre.setText(obtenerNombreArchivoDesdeUri(uri));
+            nombre.setTextSize(14);
+            nombre.setPadding(16, 0, 0, 0);
+            nombre.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+
+            ImageView btnEliminar = new ImageView(this);
+            btnEliminar.setImageResource(android.R.drawable.ic_menu_delete);
+            btnEliminar.setPadding(16, 0, 16, 0);
+            btnEliminar.setOnClickListener(v -> {
+                imagenesAdjuntas.remove(uri);
+                actualizarListaImagenes();
+            });
+
+            contenedor.addView(miniatura);
+            contenedor.addView(nombre);
+            contenedor.addView(btnEliminar);
+
+            layoutImagenesAdjuntas.addView(contenedor);
+        }
+    }
+
+    private String obtenerNombreArchivoDesdeUri(Uri uri) {
+        String nombre = getString(R.string.image_label);
+        if (uri.getScheme() != null && uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (index >= 0) {
+                    nombre = cursor.getString(index);
+                }
+                cursor.close();
+            }
+        } else if (uri.getScheme() != null && uri.getScheme().equals("file")) {
+            File archivo = new File(uri.getPath());
+            nombre = archivo.getName();
+        }
+        return nombre;
     }
 
     private String serializarUris(List<Uri> uris) {

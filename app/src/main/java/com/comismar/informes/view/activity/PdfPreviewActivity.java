@@ -86,8 +86,12 @@ public class PdfPreviewActivity extends AppCompatActivity {
             return;
         }
 
+        boolean esMercancia = "MERCANCIA".equalsIgnoreCase(informe.tipoInforme)
+                || "MERCANCIA".equalsIgnoreCase(informe.tipo)
+                || "MERCANCÍA".equalsIgnoreCase(informe.tipo);
+
         android.content.Intent intent;
-        if ("MERCANCIA".equalsIgnoreCase(informe.tipoInforme)) {
+        if (esMercancia) {
             intent = new android.content.Intent(this, EditarInformeMercanciaActivity.class);
             intent.putExtra(EditarInformeMercanciaActivity.EXTRA_INFORME_ID, informeId);
         } else {

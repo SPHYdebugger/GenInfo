@@ -227,9 +227,10 @@ public class EditarInformeActivity extends Activity {
 
         String mensajeResultado;
         String sufijoReferencia = sobrescribir ? " MOD" : " COP";
+        String rutaAnterior = informeOriginal.rutaPdf;
         File destinoPdf = construirPdfDestino(pdfGenerado, sobrescribir);
         if (destinoPdf != null && !destinoPdf.equals(pdfGenerado)) {
-            if (destinoPdf.exists()) {
+            if (destinoPdf.exists() && !destinoPdf.getAbsolutePath().equals(rutaAnterior)) {
                 destinoPdf.delete();
             }
             boolean renombrado = pdfGenerado.renameTo(destinoPdf);
@@ -239,8 +240,8 @@ public class EditarInformeActivity extends Activity {
         }
 
         if (sobrescribir) {
-            if (informeOriginal.rutaPdf != null) {
-                File archivo = new File(informeOriginal.rutaPdf);
+            if (rutaAnterior != null && !rutaAnterior.equals(pdfGenerado.getAbsolutePath())) {
+                File archivo = new File(rutaAnterior);
                 if (archivo.exists()) {
                     archivo.delete();
                 }
@@ -418,6 +419,9 @@ public class EditarInformeActivity extends Activity {
             baseOriginal = "informe_" + System.currentTimeMillis();
         }
         String sufijo = sobrescribir ? "_MOD" : "_COP";
+        if (baseOriginal.endsWith(sufijo)) {
+            return new File(pdfGenerado.getParentFile(), baseOriginal + ".pdf");
+        }
         return new File(pdfGenerado.getParentFile(), baseOriginal + sufijo + ".pdf");
     }
 
