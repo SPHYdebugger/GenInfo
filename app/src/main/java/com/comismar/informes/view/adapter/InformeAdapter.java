@@ -34,13 +34,14 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtReferencia, txtTipo, txtFecha;
+        TextView txtReferencia, txtTipo, txtDetalleAdicional, txtFecha;
         ImageView iconoBorrar;
 
         public ViewHolder(View itemView) {
             super(itemView);
             txtReferencia = itemView.findViewById(R.id.txtReferencia);
             txtTipo = itemView.findViewById(R.id.txtTipo);
+            txtDetalleAdicional = itemView.findViewById(R.id.txtDetalleAdicional);
             txtFecha = itemView.findViewById(R.id.txtFecha);
             iconoBorrar = itemView.findViewById(R.id.btnEliminar);
         }
@@ -61,7 +62,21 @@ public class InformeAdapter extends RecyclerView.Adapter<InformeAdapter.ViewHold
         
         String tipoMostrar = informe.tipoInforme != null ? informe.tipoInforme : informe.tipo;
         holder.txtTipo.setText(context.getString(R.string.type_colon, tipoMostrar));
-        
+
+        boolean esMercancia = "MERCANCIA".equalsIgnoreCase(informe.tipoInforme)
+                || "MERCANCIA".equalsIgnoreCase(informe.tipo)
+                || "MERCANCÍA".equalsIgnoreCase(informe.tipo);
+
+        if (esMercancia) {
+            String aseguradoVal = informe.asegurado != null ? informe.asegurado : "";
+            holder.txtDetalleAdicional.setText(context.getString(R.string.insured_colon, aseguradoVal));
+        } else {
+            String barcoVal = (informe.nombreBarco != null && !informe.nombreBarco.trim().isEmpty())
+                    ? informe.nombreBarco
+                    : (informe.tipo != null ? informe.tipo : "");
+            holder.txtDetalleAdicional.setText(context.getString(R.string.boat_colon, barcoVal));
+        }
+
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
         String fechaFormateada = formato.format(new Date(informe.timestamp));
         holder.txtFecha.setText(context.getString(R.string.date_colon, fechaFormateada));
